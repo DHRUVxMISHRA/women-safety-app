@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -20,19 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LoginScreen(
+fun SignupScreen(
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit,
-    onSignupClick: () -> Unit
-) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    onSignupClick: () -> Unit,
+    onLoginClick: () -> Unit)
+{
 
+
+   var email by remember { mutableStateOf("") }
+   var password by remember { mutableStateOf("") }
+   var confirmPassword by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -42,14 +44,13 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+
         Text(
-            text = "Login",
+            text = "Create Account",
             fontSize = 32.sp
         )
 
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -57,11 +58,10 @@ fun LoginScreen(
                 email = it
             },
             label = {
-                Text(
-                    text = "Email"
-                )
+                Text("Email")
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -72,34 +72,34 @@ fun LoginScreen(
                 password = it
             },
             label = {
-                Text(
-                    text = "Password"
-                )
+                Text("Email")
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = onLoginClick,
+            onClick = onSignupClick,
             modifier = Modifier.fillMaxWidth()
+
         ) {
             Text(
-                text = "Login"
+                text = "Sign Up"
             )
         }
 
         TextButton(
-            onClick = onSignupClick
+            onClick = onLoginClick
         ) {
             Text(
-                text = "Create new account"
+                text = "Already have an account? Login"
             )
         }
     }
-
 }
+
 
 @Preview(
     showBackground = true,
@@ -108,10 +108,9 @@ fun LoginScreen(
 )
 
 @Composable
-fun LoginScreenPreview(modifier: Modifier = Modifier) {
-    LoginScreen(
-        onLoginClick = {},
-        onSignupClick = {}
+fun SignupScreenPreview(modifier: Modifier = Modifier) {
+    SignupScreen(
+        onSignupClick = {},
+        onLoginClick = {}
     )
-
 }
