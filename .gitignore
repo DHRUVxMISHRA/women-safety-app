@@ -16,7 +16,7 @@ captures/
 *.apk
 output-metadata.json
 
-# IntelliJ
+# IntelliJ / Android Studio
 *.iml
 .idea/
 misc.xml
@@ -27,11 +27,12 @@ render.experimental.xml
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
+# Google Services (Firebase)
 google-services.json
 
 # Android Profiling
 *.hprof
+
 #################################
 # Python / FastAPI
 #################################
@@ -54,5 +55,10 @@ datasets/
 #################################
 # Secrets
 #################################
-google-services.json
 *.key
+
+#################################
+# OS files
+#################################
+.DS_Store
+Thumbs.db
