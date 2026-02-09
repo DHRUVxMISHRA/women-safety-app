@@ -21,9 +21,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun EmergencyScreen(
     modifier: Modifier = Modifier,
-    locationText : String = "Fetching location..."
+    locationText: String = "fetching location"
 ) {
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -33,7 +32,7 @@ fun EmergencyScreen(
     ) {
 
         Text(
-            text = "SOS Sent",
+            text = "SOS SENT",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Red
@@ -47,6 +46,7 @@ fun EmergencyScreen(
         )
     }
 }
+
 
 
 @Preview(

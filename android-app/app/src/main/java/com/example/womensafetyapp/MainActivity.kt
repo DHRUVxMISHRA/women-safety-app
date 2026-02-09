@@ -1,5 +1,7 @@
 package com.example.womensafetyapp
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.womensafetyapp.ui.auth.LoginScreen
 import com.example.womensafetyapp.ui.auth.SignupScreen
 import com.example.womensafetyapp.ui.home.HomeScreen
@@ -22,6 +26,7 @@ import com.example.womensafetyapp.ui.home.HomeScreenPreview
 import com.example.womensafetyapp.ui.profile.ProfileScreen
 import com.example.womensafetyapp.ui.sos.EmergencyScreen
 import com.example.womensafetyapp.ui.theme.WomenSafetyAppTheme
+import com.example.womensafetyapp.utils.LocationUtils
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +36,8 @@ class MainActivity : ComponentActivity() {
             WomenSafetyAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                    var currentScreen by remember { mutableStateOf("Login Screen") }
+                    var locationText by remember { mutableStateOf("Fetching location...") }
+                    val context = this
 
 
                     when(currentScreen){
@@ -56,14 +63,32 @@ class MainActivity : ComponentActivity() {
                         )
 
                         "Emergency Screen" -> EmergencyScreen(
-                         modifier = Modifier.padding(innerPadding)
+                         modifier = Modifier.padding(innerPadding),
+                         locationText = locationText
                         )
 
                         "Home Screen" -> HomeScreen(
                             modifier = Modifier.padding(innerPadding),
                             onSosClick = {
-                                currentScreen = "Emergency Screen"
+                                if (
+                                    ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                    ) == PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    LocationUtils.getCurrentLocation(context) {
+                                        locationText = it
+                                    }
+                                    currentScreen = "Emergency Screen"
+                                } else {
+                                    ActivityCompat.requestPermissions(
+                                        this,
+                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                        1001
+                                    )
+                                }
                             }
+
                         )
 
                         "Profile Screen" -> ProfileScreen()
