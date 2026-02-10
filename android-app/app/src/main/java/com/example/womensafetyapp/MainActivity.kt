@@ -1,6 +1,7 @@
 package com.example.womensafetyapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.womensafetyapp.service.SOSForegroundService
 import com.example.womensafetyapp.ui.auth.LoginScreen
 import com.example.womensafetyapp.ui.auth.SignupScreen
 import com.example.womensafetyapp.ui.home.HomeScreen
@@ -76,9 +78,17 @@ class MainActivity : ComponentActivity() {
                                         Manifest.permission.ACCESS_FINE_LOCATION
                                     ) == PackageManager.PERMISSION_GRANTED
                                 ) {
+                                    // 1️⃣ Get location
                                     LocationUtils.getCurrentLocation(context) {
                                         locationText = it
                                     }
+
+                                    // 2️⃣ Start foreground service
+                                     val serviceIntent =
+                                         Intent(context, SOSForegroundService::class.java)
+                                         context.startForegroundService(serviceIntent)
+
+                                    // 3️⃣ Navigate to emergency screen
                                     currentScreen = "Emergency Screen"
                                 } else {
                                     ActivityCompat.requestPermissions(
