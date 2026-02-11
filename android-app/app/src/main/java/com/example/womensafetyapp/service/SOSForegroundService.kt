@@ -44,8 +44,14 @@ class SOSForegroundService : Service() {
             override fun onLocationResult(result: LocationResult) {
                 val location = result.lastLocation
                 location?.let{
-                    //For now: just log or keep for future API calls
-                    println("SOS Location Update: ${it.latitude}, ${it.longitude}")
+                    val lat = it.latitude
+                    val lng = it.longitude
+
+                    val locationText = "Lat: $lat, Lng: $lng"
+
+                    updateNotification(locationText)
+                    // Optional log (keep it)
+                    println("SOS Location Update: $locationText")
                 }
             }
         }
@@ -100,6 +106,23 @@ class SOSForegroundService : Service() {
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
             .build()
+    }
+
+
+    private fun updateNotification(locationText : String) {
+        val channelId = "sos_channel"
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle("SOS Active")
+            .setContentText("Last known location : $locationText")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setOngoing(true)
+            .build()
+
+
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.notify(1,notification)
+
     }
 
 

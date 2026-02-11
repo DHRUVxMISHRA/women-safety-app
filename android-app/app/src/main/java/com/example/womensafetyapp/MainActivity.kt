@@ -3,6 +3,7 @@ package com.example.womensafetyapp
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,6 +33,14 @@ import com.example.womensafetyapp.utils.LocationUtils
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        private object Screens{
+            const val LOGIN = "Login Screen"
+            const val SIGNUP = "Signup Screen"
+            const val HOME = "Home Screen"
+            const val EMERGENCY = "Emergency Screen"
+            const val PROFILE = "Profile Screen"
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -44,34 +53,53 @@ class MainActivity : ComponentActivity() {
 
                     when(currentScreen){
 
-                        "Login Screen" -> LoginScreen(
+                        Screens.LOGIN -> LoginScreen(
                             onLoginClick = {
-                                currentScreen = "Home Screen"
+                                currentScreen = Screens.HOME
                             },
 
                             onSignupClick = {
-                                currentScreen = "Signup Screen"
+                                currentScreen = Screens.SIGNUP
                             }
                         )
 
-                        "Signup Screen" -> SignupScreen(
+                        Screens.SIGNUP -> SignupScreen(
                             onSignupClick = {
-                                currentScreen = "Home Screen"
+                                currentScreen = Screens.HOME
                             },
 
                             onLoginClick = {
-                                currentScreen = "Login Screen"
+                                currentScreen = Screens.LOGIN
                             }
                         )
 
-                        "Emergency Screen" -> EmergencyScreen(
+                        Screens.EMERGENCY -> EmergencyScreen(
                          modifier = Modifier.padding(innerPadding),
                          locationText = locationText
                         )
 
-                        "Home Screen" -> HomeScreen(
+                        Screens.HOME -> HomeScreen(
                             modifier = Modifier.padding(innerPadding),
                             onSosClick = {
+                                // 🔔 Android 13+ notification permission
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                                   if(ContextCompat.checkSelfPermission(
+                                       context,
+                                           Manifest.permission.POST_NOTIFICATIONS
+                                   ) != PackageManager.PERMISSION_GRANTED
+                                       ){
+
+                                       ActivityCompat.requestPermissions(
+                                           this,
+                                           arrayOf(Manifest .permission.POST_NOTIFICATIONS),
+                                           2001
+                                       )
+                                       return@HomeScreen
+
+                                   }
+
+                                }
+                                // 📍 Location permission
                                 if (
                                     ContextCompat.checkSelfPermission(
                                         context,
@@ -89,7 +117,7 @@ class MainActivity : ComponentActivity() {
                                          context.startForegroundService(serviceIntent)
 
                                     // 3️⃣ Navigate to emergency screen
-                                    currentScreen = "Emergency Screen"
+                                    currentScreen = Screens.EMERGENCY
                                 } else {
                                     ActivityCompat.requestPermissions(
                                         this,
@@ -101,11 +129,29 @@ class MainActivity : ComponentActivity() {
 
                         )
 
-                        "Profile Screen" -> ProfileScreen()
+                        Screens.PROFILE -> ProfileScreen()
 
                     }
                 }
             }
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String?>,
+        grantResults: IntArray,
+        deviceId: Int
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
+
+        if(requestCode == 1001 &&
+           grantResults.isNotEmpty() &&
+           grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ){
+
+
         }
     }
 }
