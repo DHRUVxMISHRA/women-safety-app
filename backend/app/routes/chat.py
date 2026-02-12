@@ -12,7 +12,7 @@ router = APIRouter()
 
 # route for chatbot - Sakhi
 @router.post("/chat/{user_id}")
-def chat(user_id: str, request: ChatRequest):
+async def chat(user_id: str, request: ChatRequest):
 
     # convo so far
     conversation = get_or_create_conversation(user_id)
