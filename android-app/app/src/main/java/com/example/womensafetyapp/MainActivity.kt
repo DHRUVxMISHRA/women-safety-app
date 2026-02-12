@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import com.example.womensafetyapp.service.SOSForegroundService
 import com.example.womensafetyapp.ui.auth.LoginScreen
 import com.example.womensafetyapp.ui.auth.SignupScreen
+import com.example.womensafetyapp.ui.chat.ChatScreen
 import com.example.womensafetyapp.ui.home.HomeScreen
 import com.example.womensafetyapp.ui.home.HomeScreenPreview
 import com.example.womensafetyapp.ui.profile.ProfileScreen
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
         const val HOME = "Home Screen"
         const val EMERGENCY = "Emergency Screen"
         const val PROFILE = "Profile Screen"
+        const val CHATSCREEN = "Chat Screen"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -127,11 +129,17 @@ class MainActivity : ComponentActivity() {
                                         1001
                                     )
                                 }
+                            },
+                            onChatClick = {
+                                currentScreen = Screens.CHATSCREEN
                             }
 
                         )
 
                         Screens.PROFILE -> ProfileScreen()
+                        Screens.CHATSCREEN -> ChatScreen(userId = "demo_user_123")
+
+
 
                     }
                 }
@@ -145,7 +153,7 @@ class MainActivity : ComponentActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if(requestCode == 1001 &&
            grantResults.isNotEmpty() &&

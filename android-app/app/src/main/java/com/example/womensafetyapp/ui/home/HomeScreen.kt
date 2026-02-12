@@ -1,5 +1,6 @@
 package com.example.womensafetyapp.ui.home
 
+import android.R
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,8 @@ import androidx.compose.ui.unit.sp
 fun HomeScreen(
     modifier: Modifier = Modifier,
    onSosClick:()-> Unit,
+    onChatClick: ()-> Unit
+
 
 ) {
 
@@ -31,7 +35,7 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
@@ -64,6 +68,23 @@ fun HomeScreen(
             fontSize = 14.sp,
             color = Color.Gray
         )
+
+
+        Button(
+            onClick = onChatClick,
+            modifier = Modifier.size(180.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1976D2)
+            ),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text(
+                text = "Talk to Sakhi",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+        }
     }
 }
 
@@ -76,6 +97,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview(){
     HomeScreen(
-        onSosClick = {}
+        onSosClick = {},
+        onChatClick = {}
     )
 }

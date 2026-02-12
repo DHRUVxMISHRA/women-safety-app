@@ -8,7 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiProvider {
 
 
-    private val okHttpClient = OkHttpClient.Builder()
+    private val okHttpClient = OkHttpClient.Builder().connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+        .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+        .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+
     fun provideApi() : ApiService =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
