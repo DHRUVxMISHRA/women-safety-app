@@ -1,27 +1,37 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.schemas.sos_schema import SOSRequest
-from app.services.twilio_service import send_sos_sms
+from app.services.twilio_service import (
+    send_sos_sms,
+    send_sos_whatsapp
+    )
 
 router = APIRouter()
 
 @router.post("/sos")
 async def trigger_sos(data: SOSRequest):
 
-    location_link = f"https://maps.google.com/?q={data.latitude},{data.longitude}"
+    try:
+        location_link = f"https://maps.google.com/?q={data.latitude},{data.longitude}"
 
-    sid = send_sos_sms(
-        to_number=data.emergency_contact,
-        location_link=location_link,
-        name=data.name
-    )
+        sms_sid = send_sos_sms(
+            to_number=data.emergency_contact,
+            location_link=location_link,
+            name=data.name
+        )
 
-    return {
-        "status": "SOS Sent",
-        "message_sid": sid
-    }
-
-# https://maps.google.com/?q=24.8829,74.6230
-# chittorgarh cordinates:
-
-# lat = 24.8829
-# lon = 74.6230
+        whatsapp_sid = send_sos_whatsapp(
+            to_number=data.emergency_contact,
+            location_link=location_link,
+            name=data.name
+        )
+        return {
+            "status": "SOS Sent",
+            "sms_sid": sms_sid,
+            "whatsapp_sid": whatsapp_sid
+        }
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code = 500,
+            detail = f"SOS Failed: {str(e)}"
+        )
