@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +23,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun EmergencyScreen(
     modifier: Modifier = Modifier,
-    locationText: String = "fetching location"
+    locationText: String = "fetching location",
+    onStopClick : () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -44,6 +47,15 @@ fun EmergencyScreen(
             text = locationText,
             fontSize = 16.sp
         )
+
+        Button(
+            onClick = onStopClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF424242)
+            )
+        ) {
+            Text("stop SOS")
+        }
     }
 }
 
@@ -57,5 +69,5 @@ fun EmergencyScreen(
 
 @Composable
 fun EmergencyScreenPreview() {
-    EmergencyScreen()
+//    EmergencyScreen()
 }

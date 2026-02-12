@@ -93,6 +93,12 @@ class SOSForegroundService : Service() {
     override fun onDestroy(){
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else{
+            stopForeground(true)
+        }
     }
     override fun onBind(intent: Intent?): IBinder? = null
         // We don't need binding
