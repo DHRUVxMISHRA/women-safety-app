@@ -32,15 +32,17 @@ import com.example.womensafetyapp.ui.theme.WomenSafetyAppTheme
 import com.example.womensafetyapp.utils.LocationUtils
 
 class MainActivity : ComponentActivity() {
+
+    private object Screens{
+        const val LOGIN = "Login Screen"
+        const val SIGNUP = "Signup Screen"
+        const val HOME = "Home Screen"
+        const val EMERGENCY = "Emergency Screen"
+        const val PROFILE = "Profile Screen"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        private object Screens{
-            const val LOGIN = "Login Screen"
-            const val SIGNUP = "Signup Screen"
-            const val HOME = "Home Screen"
-            const val EMERGENCY = "Emergency Screen"
-            const val PROFILE = "Profile Screen"
-        }
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -140,9 +142,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String?>,
-        grantResults: IntArray,
-        deviceId: Int
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
 
