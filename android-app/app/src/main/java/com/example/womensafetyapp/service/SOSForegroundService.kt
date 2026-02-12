@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import com.example.womensafetyapp.R
 import com.example.womensafetyapp.models.SosRequest
 import com.example.womensafetyapp.network.ApiProvider
+import com.example.womensafetyapp.utils.LocationUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -54,7 +55,11 @@ class SOSForegroundService : Service() {
                     val lat = it.latitude
                     val lng = it.longitude
 
-                    val locationText = "Lat: $lat, Lng: $lng"
+                    val locationText = LocationUtils.getAddressFromLocation(
+                        this@SOSForegroundService,
+                        lat,
+                        lng
+                    )
 
                     updateNotification(locationText)
                     // Optional log (keep it)

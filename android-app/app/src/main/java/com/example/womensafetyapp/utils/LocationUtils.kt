@@ -35,35 +35,36 @@ object LocationUtils {
                 onLocationResult("Location error")
             }
     }
+     fun getAddressFromLocation(
+        context: Context,
+        latitude: Double,
+        longitude: Double
+    ) : String {
+
+        return try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+
+            if(!addresses.isNullOrEmpty()){
+                val address = addresses[0]
+
+                val area = address.subLocality ?: address.locality ?: ""
+                val city = address.locality ?: ""
+                val state = address.adminArea ?: ""
+
+                when {
+                    area.isNotEmpty() -> context.getString(R.string.location_prefix) + " Near $area, $city, $state"
+                    city.isNotEmpty() ->  context.getString(R.string.location_prefix) + " $city, $state"
+                    else ->  context.getString(R.string.location_prefix) + " $state"
+                }
+            } else {
+                context.getString(R.string.location_prefix) + " Location detected (address unavailable)"
+            }
+        } catch (e : Exception) {
+            context.getString(R.string.location_prefix) +  " Location detected (address unavailable)"
+        }
+    }
 }
 
-private fun getAddressFromLocation(
-    context: Context,
-    latitude: Double,
-    longitude: Double
-) : String {
 
-    return try {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-
-        if(!addresses.isNullOrEmpty()){
-            val address = addresses[0]
-
-            val area = address.subLocality ?: address.locality ?: ""
-            val city = address.locality ?: ""
-            val state = address.adminArea ?: ""
-
-            when {
-                area.isNotEmpty() -> context.getString(R.string.location_prefix) + " Near $area, $city, $state"
-                city.isNotEmpty() ->  context.getString(R.string.location_prefix) + " $city, $state"
-                else ->  context.getString(R.string.location_prefix) + " $state"
-            }
-        } else {
-            context.getString(R.string.location_prefix) + " Location detected (address unavailable)"
-        }
-    } catch (e : Exception) {
-        context.getString(R.string.location_prefix) +  " Location detected (address unavailable)"
-    }
- }
 
