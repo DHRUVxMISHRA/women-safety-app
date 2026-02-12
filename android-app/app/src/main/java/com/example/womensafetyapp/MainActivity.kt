@@ -28,7 +28,18 @@ import com.example.womensafetyapp.ui.sos.EmergencyScreen
 import com.example.womensafetyapp.ui.theme.WomenSafetyAppTheme
 import com.example.womensafetyapp.utils.LocationUtils
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import androidx.core.content.getSystemService
+
 class MainActivity : ComponentActivity() {
+
+    private lateinit var sensorManager : SensorManager
+    private var accelerometer : Sensor? = null
+    private var lastShakeTime : Long = 0
+
 
     private object Screens {
         const val LOGIN = "Login Screen"
@@ -39,10 +50,46 @@ class MainActivity : ComponentActivity() {
         const val CHATSCREEN = "Chat Screen"
     }
 
+    private val shakeListener = object : SensorEventListener{
+
+        override fun onSensorChanged(event: SensorEvent?) {
+
+            event?.let {
+                val x = it.values[0]
+                val y = it.values[1]
+                val z = it.values[2]
+
+                val acceleration = kotlin.math.sqrt(
+                    (x*x + y*y + z*z).toDouble()
+                )
+
+                val currentTime = System.currentTimeMillis()
+
+                if( acceleration > 150 ){ //threshold:-75
+
+                    if(currentTime - lastShakeTime > 2000){//2 sec
+                        lastShakeTime = currentTime
+
+                        triggerSOSFromShake()
+
+                    }
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+//
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
         super.onCreate(savedInstanceState)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+
         enableEdgeToEdge()
         setContent {
             WomenSafetyAppTheme {
@@ -166,6 +213,38 @@ class MainActivity : ComponentActivity() {
         ) {
 
 
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        accelerometer?.also {
+            sensorManager.registerListener(
+                shakeListener,
+                it,
+                SensorManager.SENSOR_DELAY_UI
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(shakeListener)
+    }
+
+    private fun triggerSOSFromShake(){
+
+        //check location permission
+        if(ContextCompat.checkSelfPermission(
+            this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        ){
+
+            val servicIntent =
+                Intent(this, SOSForegroundService::class.java)
+
+            startForegroundService(servicIntent)
         }
     }
 }
