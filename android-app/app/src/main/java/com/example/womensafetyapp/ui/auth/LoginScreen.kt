@@ -2,6 +2,7 @@ package com.example.womensafetyapp.ui.auth
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,68 +35,72 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
 
-    ) {
-        Text(
-            text = "Login",
-            fontSize = 32.sp
-        )
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
 
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(
-                    text = "Email"
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(
-                    text = "Password"
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onLoginClick,
-            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Login"
+                text = "Login",
+                fontSize = 32.sp
             )
-        }
 
-        TextButton(
-            onClick = onSignupClick
-        ) {
-            Text(
-                text = "Create new account"
+            Spacer(
+                modifier = Modifier.height(16.dp)
             )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                },
+                label = {
+                    Text(
+                        text = "Email"
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                },
+                label = {
+                    Text(
+                        text = "Password"
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onLoginClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Login"
+                )
+            }
+
+            TextButton(
+                onClick = onSignupClick
+            ) {
+                Text(
+                    text = "Create new account"
+                )
+            }
         }
     }
 
