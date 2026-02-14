@@ -39,6 +39,7 @@
     import android.content.IntentFilter
     import android.os.SystemClock
     import android.view.KeyEvent
+    import com.example.womensafetyapp.ui.onboarding.GetStartedScreen
 
 
     class MainActivity : ComponentActivity() {
@@ -55,6 +56,7 @@
             const val EMERGENCY = "Emergency Screen"
             const val PROFILE = "Profile Screen"
             const val CHATSCREEN = "Chat Screen"
+            const val GETSTARTEDSCREEN = "Get Started Screen"
         }
 
         private val shakeListener = object : SensorEventListener{
@@ -72,7 +74,7 @@
 
                     val currentTime = System.currentTimeMillis()
 
-                    if( acceleration > 150 ){ //threshold:-75
+                    if( acceleration > 15 ){ //threshold:-75
 
                         if(currentTime - lastShakeTime > 2000){//2 sec
                             lastShakeTime = currentTime
@@ -109,12 +111,18 @@
             setContent {
                 WomenSafetyAppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        var currentScreen by remember { mutableStateOf("Login Screen") }
+                        var currentScreen by remember { mutableStateOf("Get Started Screen") }
                         var locationText by remember { mutableStateOf("Fetching location...") }
                         val context = this
 
 
                         when (currentScreen) {
+
+                            Screens.GETSTARTEDSCREEN -> GetStartedScreen(
+                                onGetStartedClick = {
+                                    currentScreen = Screens.LOGIN
+                                }
+                            )
 
                             Screens.LOGIN -> LoginScreen(
                                 onLoginClick = {
