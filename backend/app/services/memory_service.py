@@ -1,24 +1,89 @@
+from datetime import datetime, timezone
+from app.db.mongodb import conversation_collection
+from app.schemas.chat_schema import Message
 from app.core.config import SYSTEM_PROMPT
-# only storing history in memory
-# so it is volatile. need to add database
-conversation_store = {}
+from pymongo import ReturnDocument
 
-# returns the curent convo so far
+
 def get_or_create_conversation(user_id: str):
-    if user_id not in conversation_store:
-        conversation_store[user_id] = [
-            {"role": "system", "content": SYSTEM_PROMPT}
-        ]
-    return conversation_store[user_id]
+    conversation = conversation_collection.find_one({"user_id": user_id})
 
-# add the user message
+    if not conversation:
+        new_convo = {
+            "user_id": user_id,
+            "messages": [],
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        }
+        conversation_collection.insert_one(new_convo)
+        conversation = conversation_collection.find_one({"user_id": user_id})
+
+    return conversation
+
+
 def add_user_message(user_id: str, message: str):
-    conversation_store[user_id].append(
-        {"role": "user", "content": message}
+    msg = Message(
+        role="user",
+        content=message,
+        timestamp=datetime.now(timezone.utc)
     )
 
-# add assistant message
-def add_assistant_message(user_id: str, message: str):
-    conversation_store[user_id].append(
-        {"role": "assistant", "content": message}
+    conversation = conversation_collection.find_one_and_update(
+        {"user_id": user_id},
+        {
+            "$push": {
+                "messages": {
+                    "$each": [msg.model_dump()],
+                    "$slice": -100   # keep last 100 messages
+                }
+            },
+            "$set": {"updated_at": datetime.now(timezone.utc)}
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER
     )
+    return conversation
+# It tells MongoDB:
+# BEFORE → return document before update
+# AFTER → return document after update
+
+def add_assistant_message(user_id: str, message: str):
+    msg = Message(
+        role="assistant",
+        content=message,
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    conversation_collection.update_one(
+        {"user_id": user_id},
+        {
+            "$push": {
+                "messages": {
+                    "$each": [msg.model_dump()],
+                    "$slice": -100
+                }
+            },
+            "$set": {"updated_at": datetime.now(timezone.utc)}
+        }
+    )
+
+
+def format_for_llm_from_doc(conversation: dict):
+    
+    messages = conversation.get("messages", [])
+
+    # limit history before sending to model
+    messages = messages[-10:]
+
+    formatted = [
+        {"role": msg["role"], "content": msg["content"]}
+        for msg in messages
+    ]
+
+    # Inject system prompt dynamically
+    formatted.insert(0, {
+        "role": "system",
+        "content": SYSTEM_PROMPT
+    })
+
+    return formatted

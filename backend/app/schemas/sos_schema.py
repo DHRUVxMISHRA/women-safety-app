@@ -5,4 +5,3 @@ class SOSRequest(BaseModel):
     name: str
     latitude: float
     longitude: float
-    emergency_contact: str

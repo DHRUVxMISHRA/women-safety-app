@@ -1,5 +1,4 @@
 import replicate
-# import os
 from dotenv import load_dotenv
 
 load_dotenv() #contains api

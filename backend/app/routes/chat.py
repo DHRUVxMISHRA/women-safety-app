@@ -4,26 +4,33 @@ from app.services.gpt_service import generate_response
 from app.services.memory_service import (
     get_or_create_conversation,
     add_user_message,
-    add_assistant_message
+    add_assistant_message,
+    format_for_llm_from_doc
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/users",tags=["Chat-Bot"])
 
-
-# route for chatbot - Sakhi
+# route - >  /users/chat/id
 @router.post("/chat/{user_id}")
 async def chat(user_id: str, request: ChatRequest):
 
-    # convo so far
-    conversation = get_or_create_conversation(user_id)
+    # Ensure conversation exists, ignore returned
+    get_or_create_conversation(user_id)
 
-    # appends user message in convo
-    add_user_message(user_id, request.message)
+    # Store user message
+    conversation = add_user_message(user_id, request.message)
 
-    # get response from api
-    response = generate_response(conversation)
+    if conversation is None:
+        raise RuntimeError("Conversation should not be None")
+    
+    # Prepare messages for LLM
+    formatted_messages = format_for_llm_from_doc(conversation)
 
-    # appends assistant message in convo
+    # Generate response
+    response = generate_response(formatted_messages)
+
+    # Store assistant reply
     add_assistant_message(user_id, response)
 
     return {"response": response}
+
