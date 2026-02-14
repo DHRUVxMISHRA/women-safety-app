@@ -111,7 +111,7 @@
             setContent {
                 WomenSafetyAppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        var currentScreen by remember { mutableStateOf("Get Started Screen") }
+                        var currentScreen by remember { mutableStateOf("Login Screen") }
                         var locationText by remember { mutableStateOf("Fetching location...") }
                         val context = this
 
