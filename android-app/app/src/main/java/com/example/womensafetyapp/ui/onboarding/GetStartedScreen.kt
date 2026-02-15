@@ -33,10 +33,13 @@ import androidx.compose.ui.unit.sp
 import com.example.womensafetyapp.R
 import com.example.womensafetyapp.ui.theme.Poppins
 
+
+
 @Composable
 fun GetStartedScreen(
     onGetStartedClick:()->Unit
 ) {
+
 
     Box(
         modifier = Modifier
@@ -116,43 +119,47 @@ fun GetStartedScreen(
 
             Spacer(modifier = Modifier.height(100.dp))
 
-            Button(
-                onClick = onGetStartedClick,
-                shape = RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF0099)
-                ),
 
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .height(62.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(50.dp),
-                        ambientColor = Color(0xFFFF0099),
-                        spotColor = Color(0xFFFF0099)),
+                Button(
+                    onClick = onGetStartedClick,
+                    shape = RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF0099)
+                    ),
 
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 12.dp,
-                    pressedElevation = 6.dp
-                )
-            ) {
-                Text(
-                    text = "Get Started",
-                    fontSize = 16.sp,
-                    color = Color.White
-                )
-            }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .height(62.dp)
+                        .shadow(
+                            elevation = 10.dp,
+                            shape = RoundedCornerShape(50.dp),
+                            ambientColor = Color(0xFFFF0099),
+                            spotColor = Color(0xFFFF0099)
+                        ),
+
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 12.dp,
+                        pressedElevation = 6.dp
+                    )
+                ) {
+                    Text(
+                        text = "Get Started",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
+                }
+
 
             Spacer(modifier = Modifier.height(24.dp))
+
 
 
 
         }
     }
 
-    
+
 }
 
 @Preview(

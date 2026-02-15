@@ -21,6 +21,14 @@ import com.example.womensafetyapp.ui.sos.EmergencyScreen
 import android.Manifest
 
 import android.os.Build
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.womensafetyapp.ui.auth.AuthState
+import com.example.womensafetyapp.ui.auth.AuthViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
@@ -28,6 +36,31 @@ fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val authViewModel : AuthViewModel = viewModel()
+
+    val authState by authViewModel.authState.observeAsState()
+
+    LaunchedEffect(authState) {
+        when(authState){
+            is AuthState.Unauthenticated -> {
+                navController.navigate(Routes.LOGIN){
+                    popUpTo(0){
+                        inclusive = true
+                    }
+                }
+            }
+
+            is AuthState.Authenticated -> {
+                navController.navigate(Routes.HOME){
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
+            }
+
+            else -> Unit
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -58,7 +91,9 @@ fun AppNavGraph(
                 },
                 onSignupClick = {
                     navController.navigate(Routes.SIGNUP)
-                }
+                },
+                authViewModel = authViewModel,
+                navController = navController
             )
         }
 
@@ -74,7 +109,9 @@ fun AppNavGraph(
                 },
                 onLoginClick = {
                     navController.popBackStack()
-                }
+                },
+                navController = navController,
+                authViewModel = authViewModel
             )
         }
 
@@ -108,6 +145,9 @@ fun AppNavGraph(
                 },
                 onChatClick = {
                     navController.navigate(Routes.CHAT)
+                },
+                onLogoutClick = {
+                    authViewModel.signOut()
                 }
             )
         }
@@ -131,7 +171,13 @@ fun AppNavGraph(
         }
 
         composable(Routes.PROFILE){
-            ProfileScreen()
+            ProfileScreen(
+//                navController = navController,
+                onClick = {
+                    authViewModel.signOut()
+
+                }
+            )
         }
     }
 

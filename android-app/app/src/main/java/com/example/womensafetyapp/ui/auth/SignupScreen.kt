@@ -1,6 +1,7 @@
 package com.example.womensafetyapp.ui.auth
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,37 +19,51 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.womensafetyapp.R
 import com.example.womensafetyapp.ui.theme.Poppins
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.womensafetyapp.navigation.Routes
+import okhttp3.Route
 
 @Composable
 fun SignupScreen(
     modifier: Modifier = Modifier,
     onSignupClick: () -> Unit,
-    onLoginClick: () -> Unit)
+    onLoginClick: () -> Unit,
+    navController : NavHostController,
+    authViewModel: AuthViewModel)
 {
 
    var name by remember { mutableStateOf("") }
@@ -57,6 +72,29 @@ fun SignupScreen(
    var password by remember { mutableStateOf("") }
    var confirmPassword by remember { mutableStateOf("") }
 
+   val context = LocalContext.current
+
+    val authState by authViewModel.authState.observeAsState()
+    val passwordStrength by authViewModel.passwordStrength.observeAsState()
+
+
+    LaunchedEffect(authState) {
+        when(authState){
+            is AuthState.Authenticated ->{
+                navController.navigate(Routes.HOME)
+            }
+
+            is AuthState.Error -> {
+                Toast.makeText(
+                    context,
+                    (authState as AuthState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> Unit
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -217,25 +255,49 @@ fun SignupScreen(
                             shadowElevation = 45.dp.toPx()
                             shape = RoundedCornerShape(50.dp)
                             clip = false
-                        }
+                        },
+                    isError =authState is AuthState.Error && (authState as AuthState.Error).message.contains("email", true)
                 )
+
+            if(authState is AuthState.Error && (authState as AuthState.Error).message.contains("email", true)){
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = (authState as AuthState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize =12.sp,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            val passwordBorderColor = when(passwordStrength){
+
+                PasswordStrength.WEAK -> Color(0xFFB00020)
+                PasswordStrength.MEDIUM -> Color(0xFFFFC107)
+                PasswordStrength.STRONG-> Color(0xFF4CAF50)
+
+                else -> Color.White.copy(alpha = 0.3f)
+//
+            }
                 OutlinedTextField(
                     value = password,
                     onValueChange = {
                         password = it
+                        authViewModel.onPasswordChanged(it)
                     },
                     label = {
                         Text("Enter your password")
                     },
                     shape = RoundedCornerShape(50.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White.copy(alpha = 0.4f),
+                        focusedContainerColor =Color.White.copy(alpha = 0.4f),
                         unfocusedContainerColor = Color.White.copy(alpha = 0.3f),
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
+                        focusedBorderColor = passwordBorderColor,
+                        unfocusedBorderColor = passwordBorderColor,
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -250,10 +312,40 @@ fun SignupScreen(
                             shadowElevation = 45.dp.toPx()
                             shape = RoundedCornerShape(50.dp)
                             clip = false
-                        }
+                        },
+
+                    isError = authState is AuthState.Error && (authState as AuthState.Error).message.contains("password", true)
                 )
 
+            passwordStrength?.let { strength ->
+
+                Spacer(modifier = Modifier.height(4.dp))
+                val(text , color) = when(strength){
+                    PasswordStrength.WEAK ->
+                        "Weak password" to Color(0xFFB00020)
+
+                    PasswordStrength.MEDIUM ->
+                        "Medium strength password" to Color(0xFFFFC107)
+
+                    PasswordStrength.STRONG ->
+                        "Strong password" to Color(0xFF4CAF50)
+                }
+
+                Text(
+                    text = text,
+                    color = color,
+                    fontSize =14.sp,
+                    fontWeight = FontWeight.Bold,
+
+                    )
+
+//                    textStyle = TextStyle.
+
+
+            }
             Spacer(modifier = Modifier.height(16.dp))
+
+
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = {
@@ -286,10 +378,15 @@ fun SignupScreen(
                 )
 
 
+
+
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = onSignupClick,
+                onClick = {
+                 authViewModel.signup(email, password)
+                },
+                enabled = email.isNotBlank() && password.length>=6 && authState != AuthState.Loading && passwordStrength != PasswordStrength.WEAK,
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFF0099)
@@ -359,8 +456,8 @@ fun SignupScreen(
 
 @Composable
 fun SignupScreenPreview(modifier: Modifier = Modifier) {
-    SignupScreen(
-        onSignupClick = {},
-        onLoginClick = {}
-    )
+//    SignupScreen(
+//        onSignupClick = {},
+//        onLoginClick = {}
+//    )
 }
