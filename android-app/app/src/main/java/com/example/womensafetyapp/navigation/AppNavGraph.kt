@@ -27,6 +27,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
+import com.example.womensafetyapp.ui.auth.PhoneNumberScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -113,6 +114,15 @@ fun AppNavGraph(
                 navController = navController,
                 authViewModel = authViewModel
             )
+        }
+
+        composable(Routes.PHONE_NUMBER){
+
+            PhoneNumberScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
+
         }
 
         composable(Routes.HOME){
