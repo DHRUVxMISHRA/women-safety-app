@@ -47,6 +47,14 @@ import androidx.navigation.NavHostController
 import com.example.womensafetyapp.R
 import com.example.womensafetyapp.navigation.Routes
 import com.example.womensafetyapp.ui.theme.Poppins
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.example.womensafetyapp.utils.Constants
+
+
 
 @Composable
 fun LoginScreen(
@@ -61,9 +69,37 @@ fun LoginScreen(
     val authState by authViewModel.authState.observeAsState()
 
     val context = LocalContext.current
+
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(Constants.WEB_CLIENT_ID)
+        .requestEmail()
+        .build()
+
+    val googleSignInClient = GoogleSignIn.getClient(context,gso)
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+
+            idToken?.let {
+                authViewModel.firebaseAuthWithGoogle(it)
+            }
+        } catch (e : ApiException){
+            Toast.makeText(context, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
+        }
+    }
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> onLoginClick()
+            is AuthState.PhoneVerificationRequired -> {
+                navController.navigate(Routes.PHONE_NUMBER)
+            }
             is AuthState.Error -> {
                 Toast.makeText(
                     context,
@@ -238,6 +274,18 @@ fun LoginScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
+            }
+
+            Button(
+                onClick = {
+                 launcher.launch(googleSignInClient.signInIntent)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                shape = RoundedCornerShape(50.dp)
+            ) {
+                Text("Continue with Google")
             }
 
             Spacer(modifier = Modifier.height(16.dp))

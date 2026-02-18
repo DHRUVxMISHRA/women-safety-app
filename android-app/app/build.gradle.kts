@@ -82,6 +82,11 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
+    implementation(libs.firebase.auth)
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
 
 
 

@@ -1,6 +1,6 @@
 package com.example.womensafetyapp.network
 
-import com.example.womensafetyapp.utils.BASE_URL
+import com.example.womensafetyapp.utils.Constants
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +14,7 @@ object ApiProvider {
 
     fun provideApi() : ApiService =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .client(okHttpClient.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
