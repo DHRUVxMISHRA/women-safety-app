@@ -86,10 +86,11 @@ fun LoginScreen(
         try {
             val account = task.getResult(ApiException::class.java)
             val idToken = account.idToken
+            val emailFromGoogle = account.email
 
             idToken?.let {
                 if(account.email != null && idToken != null){
-                    authViewModel.googleLogin(account.email!!, idToken)
+                    authViewModel.googleLogin(emailFromGoogle!!, idToken)
                 }
             }
         } catch (e : ApiException){

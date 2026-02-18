@@ -56,6 +56,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.womensafetyapp.navigation.Routes
 import okhttp3.Route
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.example.womensafetyapp.utils.Constants
+import kotlin.contracts.contract
 
 @Composable
 fun SignupScreen(
@@ -78,10 +85,43 @@ fun SignupScreen(
     val passwordStrength by authViewModel.passwordStrength.observeAsState()
 
 
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(Constants.WEB_CLIENT_ID)
+        .requestEmail()
+        .build()
+
+    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result->
+
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+            val emailFromGoogle = account.email
+
+            if (emailFromGoogle != null && idToken != null){
+                authViewModel.googleSignup(emailFromGoogle, idToken)
+            }
+        } catch (e : Exception){
+            Toast.makeText(context, "Google Sign-Up Failed", Toast.LENGTH_SHORT).show()
+        }
+    }
     LaunchedEffect(authState) {
         when(authState){
             is AuthState.Authenticated ->{
                 navController.navigate(Routes.HOME)
+            }
+
+            is AuthState.PhoneVerificationRequired ->{
+                navController.navigate(Routes.PHONE_NUMBER){
+                    popUpTo(Routes.SIGNUP){
+                        inclusive = false
+                    }
+                }
             }
 
             is AuthState.Error -> {
@@ -416,6 +456,20 @@ fun SignupScreen(
                 )
             }
 
+
+            Button(
+                onClick = {
+                    launcher.launch(googleSignInClient.signInIntent)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                shape = RoundedCornerShape(50.dp)
+            ) {
+
+                Text("Sign Up with Google")
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
@@ -443,6 +497,8 @@ fun SignupScreen(
                     )
 
             }
+
+
         }
     }
 }
