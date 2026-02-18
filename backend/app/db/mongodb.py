@@ -9,3 +9,4 @@ db = client["women_safety"]
 
 emergency_contacts_collection = db["emergency_contacts"]
 conversation_collection = db["conversations"]
+user_collection = db["users"]

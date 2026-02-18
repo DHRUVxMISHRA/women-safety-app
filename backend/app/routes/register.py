@@ -1,0 +1,11 @@
+from fastapi import APIRouter
+from app.schemas.user_schema import User
+from app.services.register_service import add_user
+
+router = APIRouter(prefix="/users", tags=["Register-User"])
+
+@router.post("/register")
+def register_user(data: User):
+    add_user(data.model_dump())
+    return {"message": "user added successfully"}
+
