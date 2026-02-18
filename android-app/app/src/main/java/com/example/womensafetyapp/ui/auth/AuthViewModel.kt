@@ -10,6 +10,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 
 class AuthViewModel : ViewModel() {
@@ -154,23 +155,64 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+//    fun firebaseAuthWithGoogle(idToken: String) {
+//        val credential = GoogleAuthProvider.getCredential(idToken, null)
+//
+//        _authState.value = AuthState.Loading
+//
+//        auth.signInWithCredential(credential)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    // ✅ DO NOT mark as Authenticated yet
+//                    // Require phone verification
+//                    _authState.value = AuthState.PhoneVerificationRequired
+//                } else {
+//                    _authState.value = AuthState.Error(
+//                        task.exception?.message ?: "Google sign-in failed"
+//                    )
+//                }
+//            }
+//    }
+
+    fun googleLogin(email : String,idToken : String){
 
         _authState.value = AuthState.Loading
 
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // ✅ DO NOT mark as Authenticated yet
-                    // Require phone verification
-                    _authState.value = AuthState.PhoneVerificationRequired
-                } else {
-                    _authState.value = AuthState.Error(
-                        task.exception?.message ?: "Google sign-in failed"
-                    )
-                }
-            }
+
+                        auth.fetchSignInMethodsForEmail(email)
+                            .addOnCompleteListener { fetchTask ->
+
+                                if (fetchTask.isSuccessful) {
+                                    val method = fetchTask.result?.signInMethods
+
+
+                                    if (method.isNullOrEmpty()) {
+                                        // ❌ Email not registered
+                                        auth.signOut()
+                                        _authState.value = AuthState.Error(
+                                            "Email not registered. Please sign up first."
+                                        )
+                                    } else {
+                                        // ✅ User exists → now sign in
+
+                                        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+                                        auth.signInWithCredential(credential)
+                                            .addOnCompleteListener { loginTask->
+
+                                                if (loginTask.isSuccessful){
+
+                                                    _authState.value = AuthState.PhoneVerificationRequired
+
+                                                }else{
+                                                    _authState.value = AuthState.Error("Google login failed")
+                                                }
+                                            }
+                                    }
+                                }else{
+                                    _authState.value = AuthState.Error("Failed to verify email")
+                                }
+                            }
     }
 
     fun sendOtp(phone: String, activity: Activity) {

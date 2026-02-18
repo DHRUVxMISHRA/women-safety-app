@@ -88,7 +88,9 @@ fun LoginScreen(
             val idToken = account.idToken
 
             idToken?.let {
-                authViewModel.firebaseAuthWithGoogle(it)
+                if(account.email != null && idToken != null){
+                    authViewModel.googleLogin(account.email!!, idToken)
+                }
             }
         } catch (e : ApiException){
             Toast.makeText(context, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
