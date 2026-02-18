@@ -25,7 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.womensafetyapp.ui.auth.AadhaarScreen
+
 import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
 import com.example.womensafetyapp.ui.auth.OtpScreen
@@ -119,9 +119,9 @@ fun AppNavGraph(
             )
         }
 
-        composable(Routes.AADHAAR){
-            AadhaarScreen(navController)
-        }
+//        composable(Routes.AADHAAR){
+//            AadhaarScreen(navController)
+//        }
 
         composable(Routes.HOME){
             val context = LocalContext.current

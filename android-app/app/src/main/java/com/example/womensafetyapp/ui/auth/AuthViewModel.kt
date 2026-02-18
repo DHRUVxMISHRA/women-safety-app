@@ -85,7 +85,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signup(email: String, password: String) {
+    fun signup(email: String, password: String, aadhaar : String) {
 
         // 1️⃣ Empty check
         if (email.isBlank()) {
@@ -111,6 +111,9 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    val maskedAadhaar = "XXX-XXXX-${aadhaar.takeLast(4)}"
+                    // Example: Save to Firestore later
+                    // saveUserData(email, maskedAadhaar)
                     _authState.value = AuthState.PhoneVerificationRequired
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Signup failed")

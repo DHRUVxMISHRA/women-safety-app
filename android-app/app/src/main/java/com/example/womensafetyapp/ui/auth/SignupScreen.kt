@@ -72,7 +72,7 @@ fun SignupScreen(
 {
 
    var name by remember { mutableStateOf("") }
-   var addharNumber by remember { mutableStateOf("") }
+   var aadhaarNumber by remember { mutableStateOf("") }
    var email by remember { mutableStateOf("") }
    var password by remember { mutableStateOf("") }
    var confirmPassword by remember { mutableStateOf("") }
@@ -209,9 +209,12 @@ fun SignupScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = addharNumber,
+                    value = aadhaarNumber,
                     onValueChange = {
-                        addharNumber = it
+                        if(it.length <= 12 && it.all {char-> char.isDigit()}){
+                        aadhaarNumber = it
+                        }
+
                     },
                     label = {
                         Text("Enter your aadhaar number")
@@ -395,9 +398,29 @@ fun SignupScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            fun isValidAadhaar(aadhaar : String): Boolean {
+                return aadhaar.length == 12 && aadhaar.all {char -> char.isDigit()}
+            }
             Button(
-                onClick = {
-                 authViewModel.signup(email, password)
+                onClick ={
+                    if(!isValidAadhaar(aadhaarNumber)) {
+                        Toast.makeText(
+                            context,
+                            "Aadhaar must be 12 digits",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    }
+
+                    if(password != confirmPassword) {
+                        Toast.makeText(
+                            context,
+                            "Password do not match",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    }
+                 authViewModel.signup(email, password, aadhaarNumber)
                 },
                 enabled = email.isNotBlank() && password.length>=6 && authState != AuthState.Loading && passwordStrength != PasswordStrength.WEAK,
                 shape = RoundedCornerShape(50.dp),
