@@ -58,9 +58,6 @@ import com.example.womensafetyapp.utils.Constants
 
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit,
-    onSignupClick: () -> Unit,
     authViewModel: AuthViewModel,
     navController : NavHostController
 ) {
@@ -97,23 +94,7 @@ fun LoginScreen(
             Toast.makeText(context, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
         }
     }
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> onLoginClick()
-            is AuthState.PhoneVerificationRequired -> {
-                navController.navigate(Routes.PHONE_NUMBER)
-            }
-            is AuthState.Error -> {
-                Toast.makeText(
-                    context,
-                    (authState as AuthState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
 
-            else -> Unit
-        }
-    }
 
     Box(
         modifier = Modifier

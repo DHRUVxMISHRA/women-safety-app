@@ -28,7 +28,7 @@ class AuthViewModel : ViewModel() {
     private var verificationId: String? = null
 
     init {
-        checkAuthStatus()
+
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onVerificationCompleted(credential: com.google.firebase.auth.PhoneAuthCredential) {
@@ -55,13 +55,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun checkAuthStatus() {
-        if (auth.currentUser == null) {
-            _authState.value = AuthState.Unauthenticated
-        } else {
-            _authState.value = AuthState.Authenticated
-        }
-    }
 
 
     fun login(

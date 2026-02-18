@@ -67,8 +67,6 @@ import kotlin.contracts.contract
 @Composable
 fun SignupScreen(
     modifier: Modifier = Modifier,
-    onSignupClick: () -> Unit,
-    onLoginClick: () -> Unit,
     navController : NavHostController,
     authViewModel: AuthViewModel)
 {
@@ -108,31 +106,6 @@ fun SignupScreen(
             }
         } catch (e : Exception){
             Toast.makeText(context, "Google Sign-Up Failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-    LaunchedEffect(authState) {
-        when(authState){
-            is AuthState.Authenticated ->{
-                navController.navigate(Routes.HOME)
-            }
-
-            is AuthState.PhoneVerificationRequired ->{
-                navController.navigate(Routes.PHONE_NUMBER){
-                    popUpTo(Routes.SIGNUP){
-                        inclusive = false
-                    }
-                }
-            }
-
-            is AuthState.Error -> {
-                Toast.makeText(
-                    context,
-                    (authState as AuthState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            else -> Unit
         }
     }
     Box(
@@ -241,7 +214,7 @@ fun SignupScreen(
                         addharNumber = it
                     },
                     label = {
-                        Text("Enter your addhar number")
+                        Text("Enter your aadhaar number")
                     },
                     shape = RoundedCornerShape(50.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -491,7 +464,7 @@ fun SignupScreen(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 13.sp,
                         modifier = Modifier.clickable{
-                            onLoginClick()
+                            navController.popBackStack()
                         }
 
                     )

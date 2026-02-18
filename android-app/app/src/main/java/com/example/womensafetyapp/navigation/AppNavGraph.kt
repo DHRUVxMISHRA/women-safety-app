@@ -25,8 +25,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.womensafetyapp.ui.auth.AadhaarScreen
 import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
+import com.example.womensafetyapp.ui.auth.OtpScreen
 import com.example.womensafetyapp.ui.auth.PhoneNumberScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -34,8 +36,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
     val authViewModel : AuthViewModel = viewModel()
 
@@ -49,6 +50,14 @@ fun AppNavGraph(
                         inclusive = true
                     }
                 }
+            }
+
+            is AuthState.PhoneVerificationRequired -> {
+                navController.navigate(Routes.PHONE_NUMBER)
+            }
+
+            is AuthState.OtpSent -> {
+                navController.navigate(Routes.OTP)
             }
 
             is AuthState.Authenticated -> {
@@ -82,35 +91,13 @@ fun AppNavGraph(
 
         composable(Routes.LOGIN){
             LoginScreen(
-                onLoginClick = {
-                    navController.navigate(Routes.HOME){
-                        popUpTo(Routes.GET_STARTED)
-                        {
-                            inclusive = true
-                        }
-                    }
-                },
-                onSignupClick = {
-                    navController.navigate(Routes.SIGNUP)
-                },
-                authViewModel = authViewModel,
+               authViewModel = authViewModel,
                 navController = navController
             )
         }
 
         composable(Routes.SIGNUP){
             SignupScreen(
-                onSignupClick = {
-                    navController.navigate(Routes.HOME){
-                        popUpTo(Routes.GET_STARTED)
-                        {
-                            inclusive = true
-                        }
-                    }
-                },
-                onLoginClick = {
-                    navController.popBackStack()
-                },
                 navController = navController,
                 authViewModel = authViewModel
             )
@@ -123,6 +110,17 @@ fun AppNavGraph(
                 authViewModel = authViewModel
             )
 
+        }
+
+        composable(Routes.OTP){
+            OtpScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
+        }
+
+        composable(Routes.AADHAAR){
+            AadhaarScreen(navController)
         }
 
         composable(Routes.HOME){
