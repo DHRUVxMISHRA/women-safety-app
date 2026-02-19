@@ -76,7 +76,7 @@
 
                     val currentTime = System.currentTimeMillis()
 
-                    if( acceleration > 15 ){ //threshold:-75
+                    if( acceleration > 75 ){ //threshold:-75
 
                         if(currentTime - lastShakeTime > 2000){//2 sec
                             lastShakeTime = currentTime

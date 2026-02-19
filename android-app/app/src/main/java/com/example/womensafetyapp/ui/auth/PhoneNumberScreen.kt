@@ -105,6 +105,7 @@ fun PhoneNumberScreen(
             onClick = {
                 if (phone.length == 10) {
 
+                    authViewModel.setPhoneNumber("+91$phone")
                     authViewModel.sendOtp("+91$phone", activity)
 
                 } else {

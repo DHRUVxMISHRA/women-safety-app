@@ -420,7 +420,7 @@ fun SignupScreen(
                         ).show()
                         return@Button
                     }
-                 authViewModel.signup(email, password, aadhaarNumber)
+                 authViewModel.signup(name = name,email = email, password = password, aadhaar = aadhaarNumber)
                 },
                 enabled = email.isNotBlank() && password.length>=6 && authState != AuthState.Loading && passwordStrength != PasswordStrength.WEAK,
                 shape = RoundedCornerShape(50.dp),

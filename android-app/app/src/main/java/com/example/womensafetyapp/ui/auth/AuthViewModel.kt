@@ -5,10 +5,16 @@ import android.util.Patterns.EMAIL_ADDRESS
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.womensafetyapp.models.UserRequest
+import com.example.womensafetyapp.repo.UserRepo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.AutoRetryHttpClient
+import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 
@@ -26,6 +32,14 @@ class AuthViewModel : ViewModel() {
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
     private var verificationId: String? = null
+
+    private val userRepo = UserRepo()
+
+
+    private var tempName : String? = null
+    private var tempEmail : String? = null
+    private var tempAadhaar : String? = null
+    private var tempPhone : String? = null
 
     init {
 
@@ -85,7 +99,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signup(email: String, password: String, aadhaar : String) {
+    fun signup(name : String, email: String, password: String, aadhaar : String,) {
 
         // 1️⃣ Empty check
         if (email.isBlank()) {
@@ -108,12 +122,14 @@ class AuthViewModel : ViewModel() {
 
         _authState.value = AuthState.Loading
 
+        tempName = name
+        tempEmail = email
+        tempAadhaar = aadhaar
+
+        _authState.value = AuthState.Loading
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val maskedAadhaar = "XXX-XXXX-${aadhaar.takeLast(4)}"
-                    // Example: Save to Firestore later
-                    // saveUserData(email, maskedAadhaar)
                     _authState.value = AuthState.PhoneVerificationRequired
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Signup failed")
@@ -261,15 +277,55 @@ class AuthViewModel : ViewModel() {
 
         auth.currentUser?.linkWithCredential(credential)
             ?.addOnCompleteListener { task ->
+
+                println("LINK RESULT: ${task.isSuccessful}")
+
+                if (!task.isSuccessful) {
+                    println("ERROR: ${task.exception?.message}")
+                }
+
                 if (task.isSuccessful) {
-                    _authState.value = AuthState.Authenticated
+
+                    viewModelScope.launch {
+
+                        try {
+
+                            val user = UserRequest(
+                                name = tempName ?: "",
+                                contact = tempPhone ?: "",
+                                email = tempEmail ?: "",
+                                aadhaar = tempAadhaar ?: ""
+                            )
+
+                           val response =  userRepo.registerUser(user)
+                        if(response.isSuccessful) {
+
+                            val body = response.body()
+
+                            if (body?.message == "user added successfully") {
+                                _authState.value = AuthState.Authenticated
+                            } else {
+                                _authState.value = AuthState.Error("Backend Error")
+                            }
+                        } else{
+                            _authState.value = AuthState.Error("Server Error")
+                        }
+
+                        } catch (e : Exception) {
+
+                            _authState.value = AuthState.Error("Backend registration failed")
+                        }
+                    }
+                    print("OTP verify success")
                 } else {
                     _authState.value = AuthState.Error("Invalid OTP")
                 }
             }
     }
 
-
+    fun setPhoneNumber(phone : String){
+        tempPhone = phone
+    }
 }
 
 
