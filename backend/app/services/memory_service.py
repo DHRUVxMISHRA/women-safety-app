@@ -1,11 +1,13 @@
 from datetime import datetime, timezone
-from app.db.mongodb import conversation_collection
+# from app.db.mongodb import conversation_collection
+from app.db.mongodb import MongoManager
 from app.schemas.chat_schema import Message
 from app.core.config import SYSTEM_PROMPT
 from pymongo import ReturnDocument
 
 
 def get_or_create_conversation(user_id: str):
+    conversation_collection = MongoManager.get_collection("conversations")
     conversation = conversation_collection.find_one({"user_id": user_id})
 
     if not conversation:
@@ -27,6 +29,7 @@ def add_user_message(user_id: str, message: str):
         content=message,
         timestamp=datetime.now(timezone.utc)
     )
+    conversation_collection = MongoManager.get_collection("conversations")
 
     conversation = conversation_collection.find_one_and_update(
         {"user_id": user_id},
@@ -53,6 +56,7 @@ def add_assistant_message(user_id: str, message: str):
         content=message,
         timestamp=datetime.now(timezone.utc)
     )
+    conversation_collection = MongoManager.get_collection("conversations")
 
     conversation_collection.update_one(
         {"user_id": user_id},

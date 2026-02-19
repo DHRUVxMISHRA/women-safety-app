@@ -9,9 +9,8 @@ router = APIRouter(prefix="/users",tags=["Emergency-SOS"])
 @router.post("/sos")
 async def trigger_sos(data: SOSRequest):
 
-    # 
-    location_link = f"https://maps.google.com/?q={data.latitude},{data.longitude}"
-
+    id = int(data.user_id)
+    link=f"https://live-tracking-nine.vercel.app/?user_id={id}"
     #we need to send this lat long to hosted webpage, to do this first we need to update this in mongodb
 
 
@@ -29,7 +28,8 @@ async def trigger_sos(data: SOSRequest):
         for contact in contacts:
             whatsapp_sid = send_sos_whatsapp(
                 to_number=contact["phone"],
-                location_link=location_link,
+                # location_link=location_link,
+                location_link= link,
                 name=data.name
             )
 

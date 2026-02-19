@@ -1,7 +1,9 @@
-from app.db.mongodb import user_collection
+# from app.db.mongodb import user_collection
+from app.db.mongodb import MongoManager
 from app.services.aadhaar import encrypt_aadhar
 
 def add_user(data: dict):
+    user_collection = MongoManager.get_collection("users")
     id = user_collection.count_documents({})
     encrypted_aadhaar = encrypt_aadhar(data["aadhaar"])
     data["aadhaar"] = encrypted_aadhaar

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Location Tracking</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+
+    .status {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      font-size: 14px;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="status" id="status">
+  Connecting...
+</div>
+
+<div id="map"></div>
+
+<script>
+
+/////////////////////////////////////////////////
+// CONFIG
+/////////////////////////////////////////////////
+
+const BACKEND_URL =
+  "https://marquis-incurrable-declaratively.ngrok-free.dev";
+
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("user_id");
+
+if (!userId) {
+  document.getElementById("status").innerText =
+    "❌ Missing user_id in URL";
+  throw new Error("user_id missing");
+}
+
+/////////////////////////////////////////////////
+// MAP VARIABLES
+/////////////////////////////////////////////////
+
+let map;
+let marker;
+let polyline;
+let pathCoordinates = [];
+
+/////////////////////////////////////////////////
+// INITIALIZE MAP
+/////////////////////////////////////////////////
+
+async function initMap() {
+
+  const JaipurCenter = { lat: 26.9203, lng: 75.7888 };
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 16,
+    center: JaipurCenter
+  });
+
+  marker = new google.maps.Marker({
+    map: map,
+    position: JaipurCenter,
+    title: "Live Location"
+  });
+
+  polyline = new google.maps.Polyline({
+    path: pathCoordinates,
+    geodesic: true,
+    strokeColor: "#FF0000",
+    strokeOpacity: 1.0,
+    strokeWeight: 4
+  });
+
+  polyline.setMap(map);
+
+  // load previous path FIRST
+  await loadHistory();
+
+  // then start live updates
+  fetchLatest();
+  setInterval(fetchLatest, 15000);
+}
+
+/////////////////////////////////////////////////
+// LOAD HISTORY (for reload persistence)
+/////////////////////////////////////////////////
+
+async function loadHistory() {
+
+  try {
+
+    const url = new URL(`/location/${userId}`, BACKEND_URL).href;
+
+    const res = await fetch(url, {
+      headers: { "ngrok-skip-browser-warning": "true" }
+    });
+
+    const data = await res.json();
+
+    if (!data.history) return;
+
+    pathCoordinates = data.history.map(p => ({
+      lat: Number(p.latitude),
+      lng: Number(p.longitude)
+    }));
+
+    polyline.setPath(pathCoordinates);
+
+    if (data.last_location) {
+      const pos = {
+        lat: Number(data.last_location.latitude),
+        lng: Number(data.last_location.longitude)
+      };
+
+      marker.setPosition(pos);
+      map.panTo(pos);
+    }
+
+    document.getElementById("status").innerText =
+      "✅ History loaded";
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/////////////////////////////////////////////////
+// FETCH LATEST LOCATION
+/////////////////////////////////////////////////
+
+async function fetchLatest() {
+
+  try {
+
+    const url = new URL(`/location/${userId}`, BACKEND_URL).href;
+
+    const res = await fetch(url, {
+      headers: { "ngrok-skip-browser-warning": "true" }
+    });
+
+    const data = await res.json();
+
+    if (!data.last_location) return;
+
+    const pos = {
+      lat: Number(data.last_location.latitude),
+      lng: Number(data.last_location.longitude)
+    };
+
+    marker.setPosition(pos);
+    map.panTo(pos);
+
+    const lastPoint = pathCoordinates[pathCoordinates.length - 1];
+
+    if (
+      !lastPoint ||
+      lastPoint.lat !== pos.lat ||
+      lastPoint.lng !== pos.lng
+    ) {
+      pathCoordinates.push(pos);
+
+      if (pathCoordinates.length > 500)
+        pathCoordinates.shift();
+
+      polyline.setPath(pathCoordinates);
+    }
+
+    document.getElementById("status").innerText =
+      "✅ Live tracking active";
+
+  } catch (err) {
+    console.error(err);
+
+    document.getElementById("status").innerText =
+      "⏳ Waiting for location...";
+  }
+}
+
+</script>
+
+
+<!-- GOOGLE MAPS API -->
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHnlhVNYPeopOUmR4tHDB0DoXcRfMKduo&callback=initMap">
+</script>
+
+</body>
+</html>
