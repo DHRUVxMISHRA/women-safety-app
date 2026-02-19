@@ -9,8 +9,11 @@ router = APIRouter(prefix="/users",tags=["Emergency-SOS"])
 @router.post("/sos")
 async def trigger_sos(data: SOSRequest):
 
-    
+    # 
     location_link = f"https://maps.google.com/?q={data.latitude},{data.longitude}"
+
+    #we need to send this lat long to hosted webpage, to do this first we need to update this in mongodb
+
 
     contacts = get_user_contacts(data.user_id)
                             

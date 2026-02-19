@@ -11,4 +11,4 @@ def rank_routes(routes): #  [ {},{},{}] 3 routes
         i += 1
 
     min_route= min(routes, key=lambda x: x["risk_score"])# Find the element in the list with the smallest value of the key.
-    return min_route["index"]
+    return min_route , routes

@@ -6,6 +6,9 @@ router = APIRouter(prefix="/users", tags=["Register-User"])
 
 @router.post("/register")
 def register_user(data: User):
-    add_user(data.model_dump())
-    return {"message": "user added successfully"}
+    id =  add_user(data.model_dump())
+    return {
+            "message": "user added successfully",
+            "user_id": id
+            }
 

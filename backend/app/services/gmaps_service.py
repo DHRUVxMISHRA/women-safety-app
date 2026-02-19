@@ -13,8 +13,8 @@ def get_routes(
         "origin": origin,
         "destination": destination,
         "alternatives": "true",
-        "departure_time": "now",
-        "traffic_model": "best_guess",
+        # "departure_time": "now",#
+        # "traffic_model": "best_guess",
         "key": GOOGLE_API_KEY
     }
 

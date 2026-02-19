@@ -1,7 +1,12 @@
-from pydantic import BaseModel
-from datetime import datetime
+# from pydantic import BaseModel
 
-class Location(BaseModel):
-    latitude: float
-    longitude: float
-    time: datetime
+# class LocationUpdate(BaseModel):
+#     user_id: int
+#     latitude: float
+#     longitude: float
+
+
+# class LocationResponse(BaseModel):
+#     user_id: int
+#     latitude: float
+#     longitude: float
