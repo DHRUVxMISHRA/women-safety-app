@@ -6,7 +6,7 @@ from app.core.config import SYSTEM_PROMPT
 from pymongo import ReturnDocument
 
 
-def get_or_create_conversation(user_id: str):
+def get_or_create_conversation(user_id: int):
     conversation_collection = MongoManager.get_collection("conversations")
     conversation = conversation_collection.find_one({"user_id": user_id})
 
@@ -23,7 +23,7 @@ def get_or_create_conversation(user_id: str):
     return conversation
 
 
-def add_user_message(user_id: str, message: str):
+def add_user_message(user_id: int, message: str):
     msg = Message(
         role="user",
         content=message,
@@ -50,7 +50,7 @@ def add_user_message(user_id: str, message: str):
 # BEFORE → return document before update
 # AFTER → return document after update
 
-def add_assistant_message(user_id: str, message: str):
+def add_assistant_message(user_id: int, message: str):
     msg = Message(
         role="assistant",
         content=message,

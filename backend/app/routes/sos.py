@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.sos_schema import SOSRequest
 from app.services.twilio_service import send_sos_whatsapp
 from app.services.contact_service import get_user_contacts
+from app.services.live_location import update_location
 
 router = APIRouter(prefix="/users",tags=["Emergency-SOS"])
 
@@ -9,10 +10,10 @@ router = APIRouter(prefix="/users",tags=["Emergency-SOS"])
 @router.post("/sos")
 async def trigger_sos(data: SOSRequest):
 
-    id = int(data.user_id)
-    link=f"https://live-tracking-nine.vercel.app/?user_id={id}"
+    link=f"https://live-tracking-nine.vercel.app/?user_id={data.user_id}"
     #we need to send this lat long to hosted webpage, to do this first we need to update this in mongodb
-
+    
+    update_location(data)
 
     contacts = get_user_contacts(data.user_id)
                             
@@ -28,7 +29,6 @@ async def trigger_sos(data: SOSRequest):
         for contact in contacts:
             whatsapp_sid = send_sos_whatsapp(
                 to_number=contact["phone"],
-                # location_link=location_link,
                 location_link= link,
                 name=data.name
             )

@@ -3,9 +3,7 @@ from app.db.mongodb import MongoManager
 
 
 def update_location(data):
-
     loc = MongoManager.get_collection("location")
-
     # create coordinate point
     point = {
         "latitude": data.latitude,
@@ -15,16 +13,13 @@ def update_location(data):
 
     # check for same location update
     doc = loc.find_one({"_id": data.user_id}, {"last_location": 1})
-
     if doc and doc.get("last_location"):
         last = doc["last_location"]
-
         if (
             last["latitude"] == data.latitude and
             last["longitude"] == data.longitude
         ):
             return True
-
 
     # update Mongo document
     loc.update_one(
@@ -45,26 +40,15 @@ def update_location(data):
         },
         upsert=True
     )
-
     return True
 
-
-
-
 def get_location(user_id: int):
-
     loc = MongoManager.get_collection("location")
-
     doc = loc.find_one({"_id": user_id})
 
     if not doc:
         return None
 
-    # doc["user_id"] = doc.pop("_id")
-
-    # location = LocationDB(**doc)
-
-    # return location.model_dump()
     return {
         "user_id": doc["_id"],
         "last_location": doc.get("last_location"),

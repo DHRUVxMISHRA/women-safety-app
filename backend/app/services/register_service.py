@@ -1,4 +1,3 @@
-# from app.db.mongodb import user_collection
 from app.db.mongodb import MongoManager
 from app.services.aadhaar import encrypt_aadhar
 

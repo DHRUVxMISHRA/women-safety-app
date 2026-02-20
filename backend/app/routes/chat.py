@@ -12,7 +12,7 @@ router = APIRouter(prefix="/users",tags=["Chat-Bot"])
 
 # route - >  /users/chat/id
 @router.post("/chat/{user_id}")
-async def chat(user_id: str, request: ChatRequest):
+async def chat(user_id: int, request: ChatRequest):
 
     # Ensure conversation exists, ignore returned
     get_or_create_conversation(user_id)

@@ -18,7 +18,7 @@ def add_contact(contact: EmergencyContact):
 
 # url -> /users/get-contact
 @router.get("/get-contacts/{user_id}")
-def fetch_contacts(user_id: str):
+def fetch_contacts(user_id: int):
     contacts = get_user_contacts(user_id)
     
     #converting ObjectId(mongo dtype) to str before returning  
