@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.routes.chat import router as chat_router
 from app.routes.sos import router as sos_router
 from app.routes.contact_routes import router as contact_router
-from app.routes.direction import router as gmaps
+from app.routes.direction import router as safe
 from app.routes.register import router as user
 from app.routes.location_routes import router as location_router
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,10 +14,10 @@ from app.db.mongodb import MongoManager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Starting app...")
-    MongoManager.connect()
+    await MongoManager.connect()
     yield
     print("Shutting down app...")
-    MongoManager.close()
+    await MongoManager.close()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -41,8 +41,8 @@ app.include_router(sos_router)
 # add emergency contact
 app.include_router(contact_router)
 
-# add gmaps routes
-app.include_router(gmaps)
+# add safe route 
+app.include_router(safe)
 
 # add new user
 app.include_router(user)

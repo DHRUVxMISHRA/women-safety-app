@@ -13,9 +13,9 @@ async def trigger_sos(data: SOSRequest):
     link=f"https://live-tracking-nine.vercel.app/?user_id={data.user_id}"
     #we need to send this lat long to hosted webpage, to do this first we need to update this in mongodb
     
-    update_location(data)
+    await update_location(data)
 
-    contacts = get_user_contacts(data.user_id)
+    contacts = await get_user_contacts(data.user_id)
                             
     if not contacts:
         raise HTTPException(

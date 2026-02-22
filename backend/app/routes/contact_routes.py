@@ -11,15 +11,15 @@ router = APIRouter(prefix="/users", tags=["Emergency Contacts"])
 
 # url -> /users/add-contact
 @router.post("/add-contact")
-def add_contact(contact: EmergencyContact):
-    add_emergency_contact(contact.model_dump())
+async def add_contact(contact: EmergencyContact):
+    await add_emergency_contact(contact.model_dump())
     return {"message": "Contact added successfully"}
 
 
 # url -> /users/get-contact
 @router.get("/get-contacts/{user_id}")
-def fetch_contacts(user_id: int):
-    contacts = get_user_contacts(user_id)
+async def fetch_contacts(user_id: int):
+    contacts = await get_user_contacts(user_id)
     
     #converting ObjectId(mongo dtype) to str before returning  
     for contact in contacts:

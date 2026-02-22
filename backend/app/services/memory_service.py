@@ -6,9 +6,9 @@ from app.core.config import SYSTEM_PROMPT
 from pymongo import ReturnDocument
 
 
-def get_or_create_conversation(user_id: int):
+async def get_or_create_conversation(user_id: int):
     conversation_collection = MongoManager.get_collection("conversations")
-    conversation = conversation_collection.find_one({"user_id": user_id})
+    conversation = await conversation_collection.find_one({"user_id": user_id})
 
     if not conversation:
         new_convo = {
@@ -17,13 +17,13 @@ def get_or_create_conversation(user_id: int):
             "created_at": datetime.now(timezone.utc),
             "updated_at": datetime.now(timezone.utc)
         }
-        conversation_collection.insert_one(new_convo)
-        conversation = conversation_collection.find_one({"user_id": user_id})
+        await conversation_collection.insert_one(new_convo)
+        conversation = await conversation_collection.find_one({"user_id": user_id})
 
     return conversation
 
 
-def add_user_message(user_id: int, message: str):
+async def add_user_message(user_id: int, message: str):
     msg = Message(
         role="user",
         content=message,
@@ -31,7 +31,7 @@ def add_user_message(user_id: int, message: str):
     )
     conversation_collection = MongoManager.get_collection("conversations")
 
-    conversation = conversation_collection.find_one_and_update(
+    conversation = await conversation_collection.find_one_and_update(
         {"user_id": user_id},
         {
             "$push": {
@@ -50,7 +50,7 @@ def add_user_message(user_id: int, message: str):
 # BEFORE → return document before update
 # AFTER → return document after update
 
-def add_assistant_message(user_id: int, message: str):
+async def add_assistant_message(user_id: int, message: str):
     msg = Message(
         role="assistant",
         content=message,
@@ -58,7 +58,7 @@ def add_assistant_message(user_id: int, message: str):
     )
     conversation_collection = MongoManager.get_collection("conversations")
 
-    conversation_collection.update_one(
+    await conversation_collection.update_one(
         {"user_id": user_id},
         {
             "$push": {
@@ -72,7 +72,7 @@ def add_assistant_message(user_id: int, message: str):
     )
 
 
-def format_for_llm_from_doc(conversation: dict):
+async def format_for_llm_from_doc(conversation: dict):
     
     messages = conversation.get("messages", [])
 

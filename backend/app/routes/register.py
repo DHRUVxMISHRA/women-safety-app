@@ -5,8 +5,8 @@ from app.services.register_service import add_user
 router = APIRouter(prefix="/users", tags=["Register-User"])
 
 @router.post("/register")
-def register_user(data: User):
-    id =  add_user(data.model_dump())
+async def register_user(data: User):
+    id = await add_user(data.model_dump())
     return {
             "message": "user added successfully",
             "user_id": id

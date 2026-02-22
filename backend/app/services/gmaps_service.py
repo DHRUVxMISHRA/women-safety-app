@@ -1,11 +1,11 @@
-import requests
+import httpx
 from fastapi import HTTPException
 from app.core.config import GOOGLE_API_KEY
  # call direction api
 
 DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json"
 
-def get_routes(
+async def get_routes(
     origin: str,
     destination: str
 ):
@@ -18,7 +18,8 @@ def get_routes(
         "key": GOOGLE_API_KEY
     }
 
-    response = requests.get(DIRECTIONS_URL, params=params)
+    async with httpx.AsyncClient() as client:
+        response = await client.get(DIRECTIONS_URL, params=params)
 
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail="Google API error")

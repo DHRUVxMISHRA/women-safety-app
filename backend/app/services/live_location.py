@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from app.db.mongodb import MongoManager
 
 
-def update_location(data):
+async def update_location(data):
     loc = MongoManager.get_collection("location")
     # create coordinate point
     point = {
@@ -12,7 +12,11 @@ def update_location(data):
     }
 
     # check for same location update
-    doc = loc.find_one({"_id": data.user_id}, {"last_location": 1})
+    doc = await loc.find_one(
+        {"_id": data.user_id}, 
+        {"last_location": 1}
+        )
+
     if doc and doc.get("last_location"):
         last = doc["last_location"]
         if (
@@ -22,7 +26,7 @@ def update_location(data):
             return True
 
     # update Mongo document
-    loc.update_one(
+    await loc.update_one(
         {"_id": data.user_id},
         {
             # store latest position (fast lookup)
@@ -42,9 +46,9 @@ def update_location(data):
     )
     return True
 
-def get_location(user_id: int):
+async def get_location(user_id: int):
     loc = MongoManager.get_collection("location")
-    doc = loc.find_one({"_id": user_id})
+    doc = await loc.find_one({"_id": user_id})
 
     if not doc:
         return None

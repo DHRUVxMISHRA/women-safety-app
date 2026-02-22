@@ -1,14 +1,27 @@
-from app.services.polyline_service import decode_and_sample
+from app.services.sampling_service import prepare_route_points
 from app.ml_models.ml_model import predict_route_risk
+import numpy as np
 
-def rank_routes(routes): #  [ {},{},{}] 3 routes
-    i=0
-    for route in routes:
-        coords = decode_and_sample(route["polyline"]) # return np array of coords
-        risk = predict_route_risk(coords)
-        route["risk_score"] = float(risk)
-        route["index"] = i
-        i += 1
 
-    min_route= min(routes, key=lambda x: x["risk_score"])# Find the element in the list with the smallest value of the key.
-    return min_route , routes
+def rank_routes(routes):
+
+    for i, route in enumerate(routes):
+
+        # ---------- sampling ----------
+        sampled_points = prepare_route_points(route.coordinates)
+
+        # shape → (num_points, 2)
+
+        # ---------- predict risk per point ----------
+        point_risks = predict_route_risk(sampled_points)
+
+        # ---------- aggregate route risk ----------
+        route_risk = float(np.mean(point_risks))
+
+        route.risk_score = route_risk
+        route.index = i
+
+    # ---------- safest route ----------
+    safest_route = min(routes, key=lambda x: x.risk_score)
+
+    return safest_route

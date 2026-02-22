@@ -15,22 +15,22 @@ router = APIRouter(prefix="/users",tags=["Chat-Bot"])
 async def chat(user_id: int, request: ChatRequest):
 
     # Ensure conversation exists, ignore returned
-    get_or_create_conversation(user_id)
+    await get_or_create_conversation(user_id)
 
     # Store user message
-    conversation = add_user_message(user_id, request.message)
+    conversation = await add_user_message(user_id, request.message)
 
     if conversation is None:
         raise RuntimeError("Conversation should not be None")
     
     # Prepare messages for LLM
-    formatted_messages = format_for_llm_from_doc(conversation)
+    formatted_messages = await format_for_llm_from_doc(conversation)
 
     # Generate response
-    response = generate_response(formatted_messages)
+    response = await generate_response(formatted_messages)
 
     # Store assistant reply
-    add_assistant_message(user_id, response)
+    await add_assistant_message(user_id, response)
 
     return {"response": response}
 
