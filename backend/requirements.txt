@@ -1,0 +1,12 @@
+cloudinary==1.44.1
+cryptography==46.0.5
+fastapi==0.132.0
+httpx==0.28.1
+joblib==1.5.3
+motor==3.7.1
+numpy==2.4.2
+pydantic==2.12.5
+pymongo==4.16.0
+python-dotenv==1.2.1
+replicate==1.0.7
+twilio==9.10.1

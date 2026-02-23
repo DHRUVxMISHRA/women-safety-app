@@ -6,20 +6,23 @@ from app.routes.direction import router as safe
 from app.routes.register import router as user
 from app.routes.location_routes import router as location_router
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.db.init_indexes import create_indexes
+from app.routes.community_routes import router as community_router
 
 from contextlib import asynccontextmanager
 from app.db.mongodb import MongoManager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Starting app...")
+    print("🚀 App starting...")
     await MongoManager.connect()
+    await create_indexes()
     yield
-    print("Shutting down app...")
+    print("🛑 App shutting down...")
     await MongoManager.close()
 
 app = FastAPI(lifespan=lifespan)
+
 
 # backend testing using ngrok
 app.add_middleware(
@@ -49,3 +52,6 @@ app.include_router(user)
 
 # live location
 app.include_router(location_router)
+
+# community
+app.include_router(community_router)
