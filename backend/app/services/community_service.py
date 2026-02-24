@@ -71,6 +71,39 @@ async def get_feed(page: int, limit: int):
 
     return {"posts": feed, "page": page, "limit": limit}
 
+async def get_trendings(page: int, limit: int):
+    
+    posts = MongoManager.get_collection("posts")
+    skip = (page - 1) * limit # page - 1,2,3 & limit ex - 10
+
+    cursor = (
+        posts.find()
+        .sort("likes_count", -1) # desc
+        .skip(skip) # pagination
+        .limit(limit) # page size
+    )
+
+    results = await cursor.to_list(length=limit) # now query executes and data is fetched
+
+    feed = []
+
+    for p in results:
+        feed.append({
+            "post_id": str(p["_id"]),
+            "user_id": p["user_id"],
+            
+            # content can be none
+            "content": p.get("content"), # return none if not exist
+            "media_url": p.get("media_url"),
+            "media_type": p.get("media_type"),
+
+            "likes_count": p["likes_count"],
+            "comments_count": p["comments_count"],
+            "created_at": p["created_at"]
+        })
+
+    return {"trending_posts": feed, "page": page, "limit": limit}
+
 
 async def delete_post(post_id: str, user_id: int):
 

@@ -25,11 +25,18 @@ async def create_post(
 
 @router.get("/feed")
 async def get_feed(
+    page: int = Query(1, ge=1), # request - > /feed?page=2&limit=20,
+    limit: int = Query(10, le=50)  # ge- greater-equal, le- less-equal
+):                                  # 1 and 10 are default values
+    return await community_service.get_feed(page, limit)
+
+
+@router.get("/feed/trending")
+async def get_trending(
     page: int = Query(1, ge=1),
     limit: int = Query(10, le=50)
 ):
-    return await community_service.get_feed(page, limit)
-
+    return await community_service.get_trendings(page, limit)
 
 @router.delete("/posts/{post_id}")
 async def delete_post(post_id: str, user_id: int):
