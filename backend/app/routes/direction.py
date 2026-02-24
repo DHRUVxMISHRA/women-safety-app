@@ -21,6 +21,16 @@ async def get_safe_route(data: RouteRequest):
         origin=(data.origin_lat, data.origin_lng),
         destination=(data.dest_lat, data.dest_lng)
     )
+    # demo response
+    # routes = [
+        #     {
+        #         "distanceMeters": 1240,
+        #         "duration": "980s",
+        #         "polyline": {
+        #             "encodedPolyline": "u{~vFvyys@..."
+        #         }
+        #     }
+        # ]
 
     if not routes:
         raise HTTPException(
@@ -33,10 +43,29 @@ async def get_safe_route(data: RouteRequest):
 
     for route in routes:
         coords = decode_route_polyline(route)
-
+        # [Coordinate, Coordinate, Coordinate] objects of coordinate class
         processed_routes.append(
-        Route(coordinates=coords)
-)
+            Route(coordinates=coords)
+        )
+# processed_rout =
+#          [
+        #     Route(
+        #         coordinates=[
+        #             Coordinate(28.6139, 77.2090),
+        #             Coordinate(28.6141, 77.2093),
+        #             Coordinate(28.6145, 77.2098)
+        #         ]
+        #     ),
+
+        #     Route(
+        #         coordinates=[
+        #             Coordinate(28.6138, 77.2085),
+        #             Coordinate(28.6140, 77.2091),
+        #             Coordinate(28.6147, 77.2102)
+        #         ]
+        #     )
+        # ]
+
 
     # ---------- ML ranking ----------
     safest_route = rank_routes(processed_routes)

@@ -1,6 +1,15 @@
 import polyline
 from app.models.coordinate_model import Coordinate
 
+# what it receive- demo
+#               {
+#                  "distanceMeters": 1240,
+#                  "duration": "980s",
+#                  "polyline": {
+#                      "encodedPolyline": "u{~vFvyys@..."
+#                  }
+#              }
+
 def decode_route_polyline(route):
     """
     Decode polyline from Google Routes API response.
@@ -13,9 +22,9 @@ def decode_route_polyline(route):
             f"Polyline not found in route response: {route}"
         )
 
-    coords = polyline.decode(encoded)
+    coords = polyline.decode(encoded) # [(latitude, longitude), (latitude, longitude), ...]
 
-    return [
+    return [ # [Coordinate, Coordinate, Coordinate]
         Coordinate(lat,lng)
         for lat, lng in coords
     ]

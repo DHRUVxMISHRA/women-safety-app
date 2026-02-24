@@ -4,7 +4,7 @@ import numpy as np
 MODEL_PATH = "app/ml_models/safety.pkl"
 
 model = joblib.load(MODEL_PATH)
-
+# receives list of list 
 def predict_route_risk(feature_matrix: np.ndarray):
     """
     feature_matrix shape:
