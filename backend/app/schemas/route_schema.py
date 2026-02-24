@@ -1,24 +1,13 @@
 from pydantic import BaseModel
-from typing import List, Optional
-
-
-class Coordinate(BaseModel):
-    lat: float
-    lng: float
-
-
-class Route(BaseModel):
-    distance: float
-    duration: float
-    coordinates: List[Coordinate]
-
-    risk_score: Optional[float] = None
-    index: Optional[int] = None
+from typing import List
 
 
 class RouteRequest(BaseModel):
-    firebase_token: str
-    routes: List[Route]
+    origin_lat: float
+    origin_lng: float
+    dest_lat: float
+    dest_lng: float
+
 
 class RouteResponse(BaseModel):
     safest_route_index: int
