@@ -11,4 +11,5 @@ object Routes {
     const val PHONE_NUMBER = "phone_number"
     const val OTP = "otp"
     const val AADHAAR = "aadhaar"
+
 }

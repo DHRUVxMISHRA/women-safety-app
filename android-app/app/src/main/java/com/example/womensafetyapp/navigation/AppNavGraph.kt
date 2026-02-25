@@ -68,6 +68,10 @@ fun AppNavGraph(
                 }
             }
 
+            is AuthState.GetStarted  -> {
+                navController.navigate(Routes.GET_STARTED)
+            }
+
             else -> Unit
         }
     }

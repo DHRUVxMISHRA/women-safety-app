@@ -35,6 +35,25 @@ object LocationUtils {
                 onLocationResult("Location error")
             }
     }
+
+
+
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLatLng(
+        context: Context,
+        onLocationResult: (Double, Double) -> Unit
+    ){
+
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                location?.let{
+                    onLocationResult(it.latitude, it.longitude)
+            }
+            }
+    }
      fun getAddressFromLocation(
         context: Context,
         latitude: Double,
