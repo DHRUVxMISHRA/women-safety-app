@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.AutoRetryHttpClient
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
