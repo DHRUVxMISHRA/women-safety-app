@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 //    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.gms.google.services)
+//    alias(libs.plugins.google.gms.google.services)
 
     //    migration from kapt to ksp
     id("com.google.devtools.ksp")
@@ -104,7 +104,6 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.5.1")
 
-    implementation("com.google.android.libraries.navigation:navigation:5.0.1")
 
 
 
@@ -118,10 +117,15 @@ dependencies {
 //    ksp("androidx.hilt:hilt-compiler:1.3.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    // Google Maps Compose
+    implementation("com.google.maps.android:maps-compose:4.3.0")
+
+// Core Maps SDK
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+// Location
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    implementation("com.google.maps.android:maps-compose:4.3.0")
-//    implementation("com.google.android.gms:play-services-maps:18.2.0")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 

@@ -45,8 +45,7 @@
     import androidx.navigation.compose.rememberNavController
     import com.example.womensafetyapp.navigation.AppNavGraph
     import com.example.womensafetyapp.ui.onboarding.GetStartedScreen
-    import com.google.android.libraries.navigation.NavigationApi
-    import com.google.android.libraries.navigation.Navigator
+
 
 
     class MainActivity : ComponentActivity() {
@@ -112,17 +111,7 @@
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
 
-            NavigationApi.getNavigator(
-                this,
-                object : NavigationApi.NavigatorListener {
-                    override fun onNavigatorReady(navigator: Navigator) {
-                        // Your logic
-                    }
 
-                    override fun onError(errorCode: Int) {
-                    }
-                }
-            )
 
 
             enableEdgeToEdge()

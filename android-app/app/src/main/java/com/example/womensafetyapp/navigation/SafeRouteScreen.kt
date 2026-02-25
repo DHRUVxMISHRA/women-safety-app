@@ -17,23 +17,22 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.womensafetyapp.models.RouteData
 import com.example.womensafetyapp.utils.LocationUtils
-import com.google.android.libraries.navigation.AlternateRoutesStrategy
-import com.google.android.libraries.navigation.NavigationApi
-import com.google.android.libraries.navigation.Navigator
-import com.google.android.libraries.navigation.RoutingOptions
-import com.google.android.libraries.navigation.Waypoint
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.core.net.toUri
 
 @Composable
 fun SafeRouteScreen(
     viewModel: SafeRouteViewModel = hiltViewModel()
 ) {
 
-    
+
 
     val context = LocalContext.current
     val activity = context as? Activity ?: return
@@ -46,6 +45,9 @@ fun SafeRouteScreen(
 
     val routes by viewModel.routes.collectAsState()
     val safestIndex by viewModel.safeRouteIndex.collectAsState()
+
+    var selectedRouteIndex by remember { mutableStateOf<Int?>(null) }
+    val displayIndex = selectedRouteIndex ?: safestIndex
 
     Column(
         modifier = Modifier
@@ -118,12 +120,40 @@ fun SafeRouteScreen(
 
                 com.google.maps.android.compose.Polyline(
                     points = polylinePoints,
-                    color = if (safestIndex != null && index == safestIndex)
+                    clickable = true,
+                    onClick = {
+                        selectedRouteIndex = index
+                    },
+                    color = if (displayIndex != null && index == displayIndex)
                         androidx.compose.ui.graphics.Color.Green
                     else
                         androidx.compose.ui.graphics.Color.Gray,
-                    width = if (safestIndex != null && index == safestIndex) 12f else 6f
+                    width = if (displayIndex != null && index == displayIndex) 12f else 6f
                 )
+            }
+        }
+
+        if (routes.isNotEmpty() && displayIndex != null) {
+
+            val selectedRoute = routes[displayIndex]
+            val destination = selectedRoute.coordinates.last()
+
+            Button(
+                onClick = {
+                    val uri = android.net.Uri.parse(
+                        "google.navigation:q=${destination.lat},${destination.lng}&mode=d"
+                    )
+
+                    val intent = android.content.Intent(
+                        android.content.Intent.ACTION_VIEW,
+                        uri
+                    )
+
+                    intent.setPackage("com.google.android.apps.maps")
+                    context.startActivity(intent)
+                }
+            ) {
+                Text("Start Navigation")
             }
         }
     }
