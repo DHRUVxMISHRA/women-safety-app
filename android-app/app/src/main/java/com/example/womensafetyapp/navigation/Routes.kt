@@ -12,5 +12,6 @@ object Routes {
     const val OTP = "otp"
     const val AADHAAR = "aadhaar"
     const val PROFILE_SCREEN = "profile_screen"
+    const val SAFE_ROUTE = "safe_route"
 
 }

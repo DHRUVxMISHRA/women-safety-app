@@ -194,7 +194,15 @@ fun AppNavGraph(
         }
 
         composable(Routes.PROFILE){
-            Profile()
+            Profile(
+                onTrackMeClick = {
+                    navController.navigate(Routes.SAFE_ROUTE)
+                }
+            )
+        }
+
+        composable(Routes.SAFE_ROUTE){
+            SafeRouteScreen()
         }
     }
 

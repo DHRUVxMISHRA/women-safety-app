@@ -45,7 +45,7 @@ interface ApiService{
     ) : Response<List<EmergencyContactRequest>>
 
 
-    @POST("routes/safe-route")
+    @POST("users/routes/safe-route")
     suspend fun calculateSafestRoute(
         @Body request : SafeRouteRequest
     ) : SafeRouteResponse

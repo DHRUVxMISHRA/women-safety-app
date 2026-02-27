@@ -25,9 +25,10 @@
     import androidx.core.view.WindowCompat
     import androidx.core.view.WindowInsetsControllerCompat
     import androidx.compose.ui.graphics.toArgb
+    import dagger.hilt.android.AndroidEntryPoint
 
 
-
+    @AndroidEntryPoint
     class MainActivity : ComponentActivity() {
 
         private lateinit var sensorManager : SensorManager

@@ -1,5 +1,6 @@
     package com.example.womensafetyapp.navigation
 
+    import android.util.Log
     import androidx.lifecycle.ViewModel
     import androidx.lifecycle.viewModelScope
     import com.example.womensafetyapp.models.RouteData
@@ -60,8 +61,16 @@
                         destLng
                     )
 
-                    _routes.value = response.routes
+                    _routes.value = response.routes ?: emptyList()
                     _safeRouteIndex.value = response.safestRouteIndex
+                    if (response.routes == null) {
+                        Log.d("SAFE_ROUTE", "Routes is NULL from backend")
+                    } else {
+                        Log.d("SAFE_ROUTE", "Routes size: ${response.routes.size}")
+                    }
+                    Log.d("SAFE_ROUTE", "Safest index: ${response.safestRouteIndex}")
+                    Log.d("SAFE_ROUTE", "Response: $response")
+                    Log.d("SAFE_ROUTE", "Routes: ${response.routes}")
 
                 } catch (e: Exception) {
                     e.printStackTrace()

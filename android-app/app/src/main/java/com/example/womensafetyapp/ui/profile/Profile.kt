@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,11 +45,13 @@ import com.example.womensafetyapp.R
 import com.example.womensafetyapp.ui.theme.Poppins
 
 @Composable
-fun Profile(modifier: Modifier = Modifier) {
+fun Profile(
+    onTrackMeClick : () -> Unit
+) {
 
     Scaffold(
         bottomBar = {
-             BottomNavigationBar()
+           BottomNavigationBar()
         },
         containerColor = Color.Transparent
     ) { innerPadding ->
@@ -107,7 +111,7 @@ fun Profile(modifier: Modifier = Modifier) {
 
 
                 ProfileItem(R.drawable.ic_sos6, "SOS")
-                ProfileItem(R.drawable.ic_track6, "Track me")
+                ProfileItem(R.drawable.ic_track6, "Track me", onClick = onTrackMeClick)
                 ProfileItem(R.drawable.ic_helpline6, "Helpline")
                 ProfileItem(R.drawable.ic_record6, "Record")
                 ProfileItem(R.drawable.ic_sms6, "SMS")
@@ -175,7 +179,11 @@ fun ProfileItem(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfilePreview(modifier: Modifier = Modifier) {
-Profile()
+Profile(
+    onTrackMeClick = {
+
+    }
+)
 
 }
 
@@ -185,99 +193,95 @@ fun BottomNavigationBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp),
+            .height(110.dp), // more height to allow floating
         contentAlignment = Alignment.BottomCenter
     ) {
 
-        // Background Container
+        // Floating Background
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 20.dp) // side gap
                 .height(75.dp)
-                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                .offset(y = (-25).dp) // 🔥 move up from bottom
+                .shadow(
+                    elevation = 20.dp,
+                    shape = RoundedCornerShape(30.dp)
+                )
+                .clip(RoundedCornerShape(30.dp))
                 .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFFFF66B3),
-                            Color(0xFFFF0099)
-                        )
-                    )
+                    Color(0xFFFFE6F2).copy(alpha = 0.9f) // soft blend color
                 )
         )
 
-        // Navigation Items
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(75.dp)
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 40.dp)
+                .offset(y = (-12).dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            BottomItem(
-                icon = R.drawable.ic_home6,
-                label = "Home",
-                selected = false
-            )
+            BottomItem(R.drawable.ic_home6, "Home")
+            BottomItem(R.drawable.ic_updates6, "Updates")
 
-            BottomItem(
-                icon = R.drawable.ic_updates6,
-                label = "Updates",
-                selected = false
-            )
+            Spacer(modifier = Modifier.width(50.dp))
 
-            // Center SOS Button
-            Box(
-                modifier = Modifier
-                    .size(65.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFFF3B7F))
-                    .shadow(10.dp, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "SOS",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            BottomItem(R.drawable.ic_community6, "Communities")
+            BottomItem(R.drawable.ic_profile6, "Profile")
+        }
 
-            BottomItem(
-                icon = R.drawable.ic_community6,
-                label = "Communities",
-                selected = false
-            )
-
-            BottomItem(
-                icon = R.drawable.ic_profile6,
-                label = "Profile",
-                selected = false
+        // Floating SOS Button
+        Box(
+            modifier = Modifier
+                .size(70.dp)
+                .align(Alignment.TopCenter)
+                .offset(y = (-30).dp)
+                .shadow(25.dp, CircleShape)
+                .clip(CircleShape)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color(0xFFFF4F8B),
+                            Color(0xFFE91E63)
+                        )
+                    )
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "SOS",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
     }
 }
 
+
 @Composable
 fun BottomItem(
     icon: Int,
-    label: String,
-    selected: Boolean
+    label: String
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .offset(y = (-13).dp)
     ) {
 
         Image(
             painter = painterResource(icon),
             contentDescription = label,
-            modifier = Modifier.size(44.dp)
+            modifier = Modifier.size(26.dp)
         )
 
         Text(
             text = label,
             fontSize = 11.sp,
-            color = if (selected) Color.White else Color.Black
+            color = Color.Black
         )
     }
 }

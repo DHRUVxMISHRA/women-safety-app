@@ -26,6 +26,8 @@ import android.net.Uri
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.core.net.toUri
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun SafeRouteScreen(
@@ -49,6 +51,7 @@ fun SafeRouteScreen(
     var selectedRouteIndex by remember { mutableStateOf<Int?>(null) }
     val displayIndex = selectedRouteIndex ?: safestIndex
 
+    val cameraPositionState = rememberCameraPositionState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,38 +75,46 @@ fun SafeRouteScreen(
             },
             onFindRoute = {
 
-                if (uiState.startLat != null
-                    && uiState.startLng != null
-                    && uiState.destLat != null
-                    && uiState.destLng != null
-                ) {
+                LocationUtils.getLatLngFromAddress(context, startText) { startLat, startLng ->
 
-                viewModel.getSafestRoute(
-                    uiState.startLat!!,
-                    uiState.startLng!!,
-                    uiState.destLat!!,
-                    uiState.destLng!!
-                )
+                    LocationUtils.getLatLngFromAddress(context, destText) { destLat, destLng ->
+
+                        if (startLat != null && destLat != null) {
+
+                            viewModel.setStartLocation(startLat, startLng!!)
+                            viewModel.setDestination(destLat, destLng!!)
+
+                            viewModel.getSafestRoute(
+                                startLat,
+                                startLng!!,
+                                destLat,
+                                destLng!!
+                            )
+
+                        } else {
+                            Log.d("DEBUG", "Address conversion failed")
+                        }
+                    }
                 }
-
             }
         )
 
-        val cameraPositionState = rememberCameraPositionState()
 
 
-        LaunchedEffect(routes) {
-            if (routes.isNotEmpty()) {
-                val firstPoint = routes[0].coordinates.first()
 
-                cameraPositionState.position =
-                    com.google.android.gms.maps.model.CameraPosition.fromLatLngZoom(
-                        com.google.android.gms.maps.model.LatLng(
-                            firstPoint.lat,
-                            firstPoint.lng
-                        ),
-                        14f
+        LaunchedEffect(routes, safestIndex) {
+
+            if (routes.isNotEmpty() && safestIndex != null) {
+
+                val safestRoute = routes[safestIndex!!]
+                val firstPoint = safestRoute.coordinates.first()
+
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(firstPoint.lat, firstPoint.lng),
+                        15f
                     )
+                )
             }
         }
 
@@ -133,7 +144,7 @@ fun SafeRouteScreen(
             }
         }
 
-        if (routes.isNotEmpty() && displayIndex != null) {
+        if (!routes.isNullOrEmpty() && displayIndex != null) {
 
             val selectedRoute = routes[displayIndex]
             val destination = selectedRoute.coordinates.last()
