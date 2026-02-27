@@ -20,6 +20,8 @@ credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.2.0"
 firebaseCrashlyticsBuildtools = "3.0.6"
 runtimeLivedata = "1.10.3"
+material3 = "1.4.0"
+foundationLayout = "1.10.3"
 #runtimeLivedata = "1.10.3"
 #runtime = "1.10.3"
 
@@ -52,13 +54,15 @@ firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "fireb
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 #androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 #androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
-#play-services-auth = "com.google.android.gms:play-services-auth:21.5.1"
+play-services-auth = "com.google.android.gms:play-services-auth:21.5.1"
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-#kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-#google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

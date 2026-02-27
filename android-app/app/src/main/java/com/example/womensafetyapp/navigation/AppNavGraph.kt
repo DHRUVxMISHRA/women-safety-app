@@ -30,6 +30,7 @@ import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
 import com.example.womensafetyapp.ui.auth.OtpScreen
 import com.example.womensafetyapp.ui.auth.PhoneNumberScreen
+import com.example.womensafetyapp.ui.profile.Profile
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -45,7 +46,7 @@ fun AppNavGraph(
     LaunchedEffect(authState) {
         when(authState){
             is AuthState.Unauthenticated -> {
-                navController.navigate(Routes.LOGIN){
+                navController.navigate(Routes.PROFILE){
                     popUpTo(0){
                         inclusive = true
                     }
@@ -69,7 +70,7 @@ fun AppNavGraph(
             }
 
             is AuthState.GetStarted  -> {
-                navController.navigate(Routes.GET_STARTED)
+                navController.navigate(Routes.PROFILE)
             }
 
             else -> Unit
@@ -78,7 +79,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.GET_STARTED
+        startDestination = Routes.PROFILE
     ){
 
         composable(Routes.GET_STARTED){
@@ -182,7 +183,7 @@ fun AppNavGraph(
             ChatScreen(userId = "demo_user_123")
         }
 
-        composable(Routes.PROFILE){
+        composable(Routes.PROFILE_SCREEN){
             ProfileScreen(
 //                navController = navController,
                 onClick = {
@@ -190,6 +191,10 @@ fun AppNavGraph(
 
                 }
             )
+        }
+
+        composable(Routes.PROFILE){
+            Profile()
         }
     }
 

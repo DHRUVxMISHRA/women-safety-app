@@ -2,6 +2,7 @@ package com.example.womensafetyapp.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,14 +11,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -34,71 +45,80 @@ import com.example.womensafetyapp.ui.theme.Poppins
 @Composable
 fun Profile(modifier: Modifier = Modifier) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colorStops = arrayOf(
-                        0.0f to Color(0xFFFFFFFF), // 0% White
-//                      0.7f to Color(0xFFFF0099).copy(alpha = 0.7f) // 75% Pink
-                        0.75f to Color(0xFFFF66B3)
-                    )
-                ),
-//                Color.White.copy(alpha = 0.1f)
-            )
-    ){
-
-        Image(
-            painter = painterResource(R.drawable.circle2),
-            contentDescription = "circle",
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            contentScale = ContentScale.FillWidth
-        )
-
-        Column(
+    Scaffold(
+        bottomBar = {
+             BottomNavigationBar()
+        },
+        containerColor = Color.Transparent
+    ) { innerPadding ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 60.dp, start = 24.dp, bottom = 24.dp, end = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(innerPadding)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            0.0f to Color(0xFFFFFFFF), // 0% White
+//                      0.7f to Color(0xFFFF0099).copy(alpha = 0.7f) // 75% Pink
+                            0.75f to Color(0xFFFF66B3)
+                        )
+                    ),
+//                Color.White.copy(alpha = 0.1f)
+                )
+        ) {
 
-            ) {
-            // Avatar
             Image(
-                painter = painterResource(R.drawable.profile_avatar), // add your avatar image
-                contentDescription = "Profile",
+                painter = painterResource(R.drawable.circle2),
+                contentDescription = "circle",
                 modifier = Modifier
-                    .height(110.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                contentScale = ContentScale.FillWidth
             )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = 20.dp, start = 24.dp, bottom = 24.dp, end = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+
+                ) {
+                // Avatar
+                Image(
+                    painter = painterResource(R.drawable.profile_avatar), // add your avatar image
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .height(110.dp)
+                )
 
 // Name
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "Isha Sharma",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = Poppins,
-                color = Color.Black
-            )
+                Text(
+                    text = "Isha Sharma",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = Poppins,
+                    color = Color.Black
+                )
 
-            Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
 
-            ProfileItem(R.drawable.ic_sos, "SOS")
-//            ProfileItem(R.drawable.ic_track, "Track me")
-//            ProfileItem(R.drawable.ic_helpline, "Helpline")
-//            ProfileItem(R.drawable.ic_record, "Record")
-//            ProfileItem(R.drawable.ic_sms, "SMS")
-//            ProfileItem(R.drawable.ic_support, "App Support")
-//            ProfileItem(R.drawable.ic_settings, "Settings")
+                ProfileItem(R.drawable.ic_sos6, "SOS")
+                ProfileItem(R.drawable.ic_track6, "Track me")
+                ProfileItem(R.drawable.ic_helpline6, "Helpline")
+                ProfileItem(R.drawable.ic_record6, "Record")
+                ProfileItem(R.drawable.ic_sms6, "SMS")
+                ProfileItem(R.drawable.ic_support6, "App Support")
+                ProfileItem(R.drawable.ic_settings6, "Settings")
 
+            }
         }
     }
-
 }
+
 
 @Composable
 fun ProfileItem(
@@ -106,29 +126,31 @@ fun ProfileItem(
     title: String,
     onClick: () -> Unit = {}
 ) {
-
-    Button(
+    androidx.compose.material3.Card(
         onClick = onClick,
+        shape = RoundedCornerShape(30.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .height(60.dp)
-            .shadow(6.dp, RoundedCornerShape(30.dp)),
-        shape = RoundedCornerShape(30.dp),
-        colors = ButtonDefaults.buttonColors(
+            .padding(vertical = 4.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
             containerColor = Color(0xFFF8D6E4)
+        ),
+        elevation = androidx.compose.material3.CardDefaults.cardElevation(
+            defaultElevation = 6.dp
         )
     ) {
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)   // lock the height
+                .padding(vertical = 8.dp, horizontal = 18.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             Image(
                 painter = painterResource(icon),
                 contentDescription = title,
-                modifier = Modifier.height(32.dp)
+                modifier = Modifier.size(40.dp)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -141,11 +163,11 @@ fun ProfileItem(
                 modifier = Modifier.weight(1f)
             )
 
-//            Image(
-//                painter = painterResource(R.drawable.ic_arrow), // right arrow icon
-//                contentDescription = "arrow",
-//                modifier = Modifier.height(20.dp)
-//            )
+            Image(
+                painter = painterResource(R.drawable.arrowright),
+                contentDescription = "arrow",
+                modifier = Modifier.height(18.dp)
+            )
         }
     }
 }
@@ -155,4 +177,107 @@ fun ProfileItem(
 fun ProfilePreview(modifier: Modifier = Modifier) {
 Profile()
 
+}
+
+@Composable
+fun BottomNavigationBar() {
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+
+        // Background Container
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp)
+                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFFF66B3),
+                            Color(0xFFFF0099)
+                        )
+                    )
+                )
+        )
+
+        // Navigation Items
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp)
+                .padding(horizontal = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            BottomItem(
+                icon = R.drawable.ic_home6,
+                label = "Home",
+                selected = false
+            )
+
+            BottomItem(
+                icon = R.drawable.ic_updates6,
+                label = "Updates",
+                selected = false
+            )
+
+            // Center SOS Button
+            Box(
+                modifier = Modifier
+                    .size(65.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFFF3B7F))
+                    .shadow(10.dp, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "SOS",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            BottomItem(
+                icon = R.drawable.ic_community6,
+                label = "Communities",
+                selected = false
+            )
+
+            BottomItem(
+                icon = R.drawable.ic_profile6,
+                label = "Profile",
+                selected = false
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomItem(
+    icon: Int,
+    label: String,
+    selected: Boolean
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Image(
+            painter = painterResource(icon),
+            contentDescription = label,
+            modifier = Modifier.size(44.dp)
+        )
+
+        Text(
+            text = label,
+            fontSize = 11.sp,
+            color = if (selected) Color.White else Color.Black
+        )
+    }
 }

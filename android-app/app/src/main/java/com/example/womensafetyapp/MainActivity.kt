@@ -1,50 +1,30 @@
     package com.example.womensafetyapp
 
     import android.Manifest
-    import android.app.Activity
     import android.content.Intent
     import android.content.pm.PackageManager
-    import android.os.Build
     import android.os.Bundle
     import androidx.activity.ComponentActivity
     import androidx.activity.compose.setContent
     import androidx.activity.enableEdgeToEdge
     import androidx.compose.foundation.layout.fillMaxSize
-    import androidx.compose.foundation.layout.padding
-    import androidx.compose.material3.Scaffold
-    import androidx.compose.runtime.getValue
-    import androidx.compose.runtime.mutableStateOf
-    import androidx.compose.runtime.remember
-    import androidx.compose.runtime.setValue
     import androidx.compose.ui.Modifier
-    import androidx.core.app.ActivityCompat
     import androidx.core.content.ContextCompat
     import com.example.womensafetyapp.service.SOSForegroundService
-    import com.example.womensafetyapp.ui.auth.LoginScreen
-    import com.example.womensafetyapp.ui.auth.SignupScreen
-    import com.example.womensafetyapp.ui.chat.ChatScreen
-    import com.example.womensafetyapp.ui.home.HomeScreen
-    import com.example.womensafetyapp.ui.profile.ProfileScreen
-    import com.example.womensafetyapp.ui.sos.EmergencyScreen
     import com.example.womensafetyapp.ui.theme.WomenSafetyAppTheme
-    import com.example.womensafetyapp.utils.LocationUtils
-
     import android.hardware.Sensor
     import android.hardware.SensorEvent
     import android.hardware.SensorEventListener
     import android.hardware.SensorManager
-    import androidx.core.content.getSystemService
-
-    import android.content.BroadcastReceiver
-    import android.content.Context
-    import android.content.IntentFilter
     import android.os.SystemClock
     import android.view.KeyEvent
     import androidx.compose.foundation.layout.Box
-    import androidx.compose.ui.platform.LocalContext
+    import androidx.compose.ui.graphics.Color
     import androidx.navigation.compose.rememberNavController
     import com.example.womensafetyapp.navigation.AppNavGraph
-    import com.example.womensafetyapp.ui.onboarding.GetStartedScreen
+    import androidx.core.view.WindowCompat
+    import androidx.core.view.WindowInsetsControllerCompat
+    import androidx.compose.ui.graphics.toArgb
 
 
 
@@ -105,6 +85,15 @@
 
         override fun onCreate(savedInstanceState: Bundle?) {
 
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+
+// Make status bar transparent
+            window.statusBarColor = Color(0XFFE5E5E5).toArgb()
+
+// Control status bar icons color (dark icons for light background)
+            WindowInsetsControllerCompat(window, window.decorView)
+                .isAppearanceLightStatusBars = true
+
             super.onCreate(savedInstanceState)
 
             sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -117,21 +106,14 @@
             enableEdgeToEdge()
             setContent {
                 WomenSafetyAppTheme {
-                    Scaffold(
+                    val navController = rememberNavController()
+
+                    Box(
                         modifier = Modifier.fillMaxSize()
-                    ) { innerPadding ->
-
-                        val navController = rememberNavController()
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding)
-                        ) {
-                            AppNavGraph(
-                                navController = navController
-                            )
-                        }
+                    ) {
+                        AppNavGraph(
+                            navController = navController
+                        )
                     }
                 }
             }

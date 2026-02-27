@@ -72,7 +72,7 @@ fun GetStartedScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
 
 

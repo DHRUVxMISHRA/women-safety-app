@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
-//    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 
     //    migration from kapt to ksp
     id("com.google.devtools.ksp")
@@ -13,7 +13,7 @@ plugins {
 //    serialization dependency
     alias(libs.plugins.kotlin.serialization)
 
-    id("org.jetbrains.kotlin.plugin.compose")
+
 }
 
 android {
@@ -72,12 +72,14 @@ dependencies {
 //    implementation(libs.androidx.compose.foundation.layout)
 //    implementation(libs.androidx.compose.ui.text)
 //    implementation(libs.androidx.compose.ui.text.google.fonts)
-    implementation(libs.firebase.auth)
+
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation.layout)
 //    implementation(libs.androidx.compose.runtime.livedata)
 //    implementation(libs.androidx.compose.runtime)
 //    implementation(libs.androidx.ui.graphics)
@@ -99,9 +101,9 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    implementation(libs.firebase.auth)
-    implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
 
+    implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
+    implementation(libs.firebase.auth)
     implementation("com.google.android.gms:play-services-auth:21.5.1")
 
 
