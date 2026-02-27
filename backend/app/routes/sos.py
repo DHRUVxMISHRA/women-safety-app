@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas.sos_schema import SOSRequest
-from app.services.twilio_service import send_sos_whatsapp
+from app.services.twilio_service import (
+    send_sos_whatsapp,
+    send_sos_sms
+)
 from app.services.contact_service import get_user_contacts
 from app.services.live_location import update_location
 
@@ -32,11 +35,18 @@ async def trigger_sos(data: SOSRequest):
                 location_link= link,
                 name=data.name
             )
+            sms_sid = send_sos_sms(
+                to_number=contact["phone"],
+                location_link= link,
+                name=data.name
+            )
+            
 
             results.append({
                 "contact_name": contact["name"],
                 "phone": contact["phone"],
-                "whatsapp_sid": whatsapp_sid
+                "whatsapp_sid": whatsapp_sid,
+                "sms_sid": sms_sid
             })
     except Exception as e:
         raise HTTPException(
