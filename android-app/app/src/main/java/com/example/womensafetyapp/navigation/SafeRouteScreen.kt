@@ -23,8 +23,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -35,11 +42,11 @@ fun SafeRouteScreen(
 ) {
 
 
-
     val context = LocalContext.current
     val activity = context as? Activity ?: return
-    val uiState by viewModel.uiState.collectAsState()
 
+    val cameraPositionState = rememberCameraPositionState()
+    val uiState by viewModel.uiState.collectAsState()
 
 
     var startText by remember { mutableStateOf("") }
@@ -51,91 +58,26 @@ fun SafeRouteScreen(
     var selectedRouteIndex by remember { mutableStateOf<Int?>(null) }
     val displayIndex = selectedRouteIndex ?: safestIndex
 
-    val cameraPositionState = rememberCameraPositionState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
+
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
 
-        LocationPickerSection(
-            startLocationText = startText,
-            destinationText = destText,
-            onStartChange = {
-                startText = it
-            },
-            onDestinationChange = {
-                destText = it
-            },
-            onUseCurrentLocation = {
-
-                // Get current location
-                LocationUtils.getCurrentLatLng(activity) { lat, lng ->
-                    viewModel.setStartLocation(lat, lng)
-                }
-            },
-            onFindRoute = {
-
-                LocationUtils.getLatLngFromAddress(context, startText) { startLat, startLng ->
-
-                    LocationUtils.getLatLngFromAddress(context, destText) { destLat, destLng ->
-
-                        if (startLat != null && destLat != null) {
-
-                            viewModel.setStartLocation(startLat, startLng!!)
-                            viewModel.setDestination(destLat, destLng!!)
-
-                            viewModel.getSafestRoute(
-                                startLat,
-                                startLng!!,
-                                destLat,
-                                destLng!!
-                            )
-
-                        } else {
-                            Log.d("DEBUG", "Address conversion failed")
-                        }
-                    }
-                }
-            }
-        )
-
-
-
-
-        LaunchedEffect(routes, safestIndex) {
-
-            if (routes.isNotEmpty() && safestIndex != null) {
-
-                val safestRoute = routes[safestIndex!!]
-                val firstPoint = safestRoute.coordinates.first()
-
-                cameraPositionState.animate(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(firstPoint.lat, firstPoint.lng),
-                        15f
-                    )
-                )
-            }
-        }
-
+        // 🔥 FULL SCREEN MAP
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
         ) {
-
             routes.forEachIndexed { index, route ->
-
                 val polylinePoints = route.coordinates.map {
-                    com.google.android.gms.maps.model.LatLng(it.lat, it.lng)
+                    LatLng(it.lat, it.lng)
                 }
 
                 com.google.maps.android.compose.Polyline(
                     points = polylinePoints,
                     clickable = true,
-                    onClick = {
-                        selectedRouteIndex = index
-                    },
-                    color = if (displayIndex != null && index == displayIndex)
+                    onClick = { selectedRouteIndex = index },
+                    color = if (displayIndex != null && index == safestIndex)
                         androidx.compose.ui.graphics.Color.Green
                     else
                         androidx.compose.ui.graphics.Color.Gray,
@@ -144,28 +86,64 @@ fun SafeRouteScreen(
             }
         }
 
-        if (!routes.isNullOrEmpty() && displayIndex != null) {
-
-            val selectedRoute = routes[displayIndex]
-            val destination = selectedRoute.coordinates.last()
-
-            Button(
-                onClick = {
-                    val uri = android.net.Uri.parse(
-                        "google.navigation:q=${destination.lat},${destination.lng}&mode=d"
-                    )
-
-                    val intent = android.content.Intent(
-                        android.content.Intent.ACTION_VIEW,
-                        uri
-                    )
-
-                    intent.setPackage("com.google.android.apps.maps")
-                    context.startActivity(intent)
+        // 🔥 FLOATING CARD ON TOP
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 60.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                )
+        ) {
+            LocationPickerSection(
+                startLocationText = startText,
+                destinationText = destText,
+                onStartChange = { startText = it },
+                onDestinationChange = { destText = it },
+                onUseCurrentLocation = {
+                    LocationUtils.getCurrentLatLng(activity) { lat, lng ->
+                        viewModel.setStartLocation(lat, lng)
+                    }
+                },
+                onFindRoute = {
+                    LocationUtils.getLatLngFromAddress(context, startText) { startLat, startLng ->
+                        LocationUtils.getLatLngFromAddress(context, destText) { destLat, destLng ->
+                            if (startLat != null && destLat != null) {
+                                viewModel.setStartLocation(startLat, startLng!!)
+                                viewModel.setDestination(destLat, destLng!!)
+                                viewModel.getSafestRoute(
+                                    startLat,
+                                    startLng!!,
+                                    destLat,
+                                    destLng!!
+                                )
+                            }
+                        }
+                    }
                 }
-            ) {
-                Text("Start Navigation")
-            }
+            )
+
+        }
+    }
+
+
+
+    LaunchedEffect(routes, safestIndex) {
+
+        if (routes.isNotEmpty() && safestIndex != null) {
+
+            val safestRoute = routes[safestIndex!!]
+            val firstPoint = safestRoute.coordinates.first()
+
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(firstPoint.lat, firstPoint.lng),
+                    15f
+                )
+            )
         }
     }
 }
+
+

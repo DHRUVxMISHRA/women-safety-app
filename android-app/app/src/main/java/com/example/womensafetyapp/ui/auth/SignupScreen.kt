@@ -140,7 +140,7 @@ fun SignupScreen(
 
         ) {
 
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
 
             Text(

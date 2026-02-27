@@ -151,11 +151,11 @@ class SOSForegroundService : Service() {
     private fun sendSosToBackend(latitude : Double, longitude : Double) {
 
         val request = SosRequest(
-            userId = "demo_user_123",
+            userId = 500,
             name = "Dhruv",
             latitude = latitude,
             longitude = longitude,
-            emergencyContact = "+919057625639"
+
         )
 
         CoroutineScope(Dispatchers.IO).launch {

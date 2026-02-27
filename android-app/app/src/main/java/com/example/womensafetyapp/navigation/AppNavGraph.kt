@@ -22,9 +22,13 @@ import android.Manifest
 
 import android.os.Build
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.core.app.ActivityCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.womensafetyapp.MyViewModel.SOSViewModel
 
 import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
@@ -62,7 +66,7 @@ fun AppNavGraph(
             }
 
             is AuthState.Authenticated -> {
-                navController.navigate(Routes.HOME){
+                navController.navigate(Routes.PROFILE){
                     popUpTo(0) {
                         inclusive = true
                     }
@@ -70,7 +74,7 @@ fun AppNavGraph(
             }
 
             is AuthState.GetStarted  -> {
-                navController.navigate(Routes.PROFILE)
+                navController.navigate(Routes.GET_STARTED)
             }
 
             else -> Unit
@@ -79,7 +83,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.PROFILE
+        startDestination = Routes.GET_STARTED
     ){
 
         composable(Routes.GET_STARTED){
@@ -141,18 +145,26 @@ fun AppNavGraph(
                     if (ContextCompat.checkSelfPermission(
                             context,
                             Manifest.permission.ACCESS_FINE_LOCATION
-                        ) == PackageManager.PERMISSION_GRANTED
+                        ) != PackageManager.PERMISSION_GRANTED
                     ) {
 
-                        val serviceIntent =
-                            Intent(context, SOSForegroundService::class.java)
+                        // Request permission
+                        ActivityCompat.requestPermissions(
+                            context as android.app.Activity,
+                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            100
+                        )
 
-                        context.startForegroundService(serviceIntent)
+                        return@HomeScreen
+                    }
 
-                        navController.navigate(Routes.EMERGENCY){
-                            launchSingleTop = true
-                        }
+                    val serviceIntent =
+                        Intent(context, SOSForegroundService::class.java)
 
+                    context.startForegroundService(serviceIntent)
+
+                    navController.navigate(Routes.EMERGENCY) {
+                        launchSingleTop = true
                     }
 
                 },
@@ -168,8 +180,11 @@ fun AppNavGraph(
         composable(Routes.EMERGENCY){
 
             val context = LocalContext.current
+            val viewModel: SOSViewModel = hiltViewModel()
+            val locationText by viewModel.locationText.collectAsState()
+
             EmergencyScreen(
-                locationText = "Fetching Location...",
+                locationText = locationText,
                 onStopClick = {
                     // 🛑 Stop foreground service
                     val serviceIntent = Intent(context, SOSForegroundService::class.java)
@@ -197,6 +212,10 @@ fun AppNavGraph(
             Profile(
                 onTrackMeClick = {
                     navController.navigate(Routes.SAFE_ROUTE)
+                },
+
+                onSOSClick = {
+                    navController.navigate(Routes.HOME)
                 }
             )
         }

@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.material)
 //    implementation(libs.androidx.compose.runtime.livedata)
 //    implementation(libs.androidx.compose.runtime)
 //    implementation(libs.androidx.ui.graphics)

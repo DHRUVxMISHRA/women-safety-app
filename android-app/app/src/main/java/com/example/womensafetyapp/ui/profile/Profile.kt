@@ -46,7 +46,8 @@ import com.example.womensafetyapp.ui.theme.Poppins
 
 @Composable
 fun Profile(
-    onTrackMeClick : () -> Unit
+    onTrackMeClick : () -> Unit,
+    onSOSClick : () -> Unit
 ) {
 
     Scaffold(
@@ -110,7 +111,7 @@ fun Profile(
                 Spacer(modifier = Modifier.height(30.dp))
 
 
-                ProfileItem(R.drawable.ic_sos6, "SOS")
+                ProfileItem(R.drawable.ic_sos6, "SOS", onClick = onSOSClick)
                 ProfileItem(R.drawable.ic_track6, "Track me", onClick = onTrackMeClick)
                 ProfileItem(R.drawable.ic_helpline6, "Helpline")
                 ProfileItem(R.drawable.ic_record6, "Record")
@@ -181,6 +182,9 @@ fun ProfileItem(
 fun ProfilePreview(modifier: Modifier = Modifier) {
 Profile(
     onTrackMeClick = {
+
+    },
+    onSOSClick = {
 
     }
 )

@@ -17,7 +17,7 @@ import retrofit2.http.Path
 
 interface ApiService{
 
-    @POST("sos")
+    @POST("users/sos")
     suspend fun sendSos(
       @Body request : SosRequest
     ) : SosRequest
