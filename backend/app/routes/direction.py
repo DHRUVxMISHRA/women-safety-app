@@ -1,9 +1,14 @@
+from urllib import response
+
 from fastapi import APIRouter, HTTPException
-from app.schemas.route_schema import RouteRequest, RouteResponse
+from app.schemas.route_schema import RouteRequest, RouteResponseItem, RouteResponse
 from app.services.risk_service import rank_routes
 from app.services.directions_service import fetch_routes
 from app.services.polyline_service import decode_route_polyline
-from app.models.route_model import Route
+from app.models.route_model import Route as MLRoute
+import json
+from app.schemas.route_schema import Coordinate as CoordinateSchema
+
 router = APIRouter(prefix="/users/routes", tags=["Route Risk"])
 
 
@@ -40,13 +45,22 @@ async def get_safe_route(data: RouteRequest):
 
     # ---------- Convert polylines ----------
     processed_routes = []
+    route_metadata = []
 
-    for route in routes:
+    for idx, route in enumerate(routes):
         coords = decode_route_polyline(route)
+        duration_sec = int(route["duration"].replace("s",""))
         # [Coordinate, Coordinate, Coordinate] objects of coordinate class
         processed_routes.append(
-            Route(coordinates=coords)
+            MLRoute(coordinates=coords)
         )
+
+        route_metadata.append({
+            "route_index": idx,
+            "distance": route["distanceMeters"],
+            "duration": duration_sec,
+            "coordinates": coords
+            })
 # processed_rout =
 #          [
         #     Route(
@@ -70,7 +84,22 @@ async def get_safe_route(data: RouteRequest):
     # ---------- ML ranking ----------
     safest_route = rank_routes(processed_routes)
 
+    response_routes = [
+        RouteResponseItem(
+            route_index=meta["route_index"],
+            coordinates=[
+                CoordinateSchema(lat=c.lat, lng=c.lng)  # ✅ convert manually
+                for c in meta["coordinates"]
+            ],
+            distance=meta["distance"],
+            duration=meta["duration"]
+        )
+        for meta in route_metadata
+    ]
+
+    
     # ---------- Response ----------
     return RouteResponse(
+        routes=response_routes,
         safest_route_index=safest_route.index
     )
