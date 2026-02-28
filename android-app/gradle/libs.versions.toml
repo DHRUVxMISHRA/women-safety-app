@@ -23,6 +23,8 @@ runtimeLivedata = "1.10.3"
 material3 = "1.4.0"
 foundationLayout = "1.10.3"
 composeMaterial = "1.5.6"
+runtime = "1.10.3"
+foundation = "1.10.3"
 #runtimeLivedata = "1.10.3"
 #runtime = "1.10.3"
 
@@ -59,6 +61,8 @@ play-services-auth = "com.google.android.gms:play-services-auth:21.5.1"
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 [plugins]
