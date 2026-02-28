@@ -26,7 +26,7 @@ async def get_or_create_conversation(user_id: int):
 async def add_user_message(user_id: int, message: str):
     msg = Message(
         role="user",
-        content=message,
+        content=message+" My current location is: kookas Jaipur, Rajasthan, India.",
         timestamp=datetime.now(timezone.utc)
     )
     conversation_collection = MongoManager.get_collection("conversations")

@@ -33,6 +33,8 @@ def sample_route_points(coords: np.ndarray, n_samples: int = 50):
 
 
 def prepare_route_points(coordinates, n_samples=50):
-    coords = coords_to_numpy(coordinates) # list of coord objects
+    # coords = coords_to_numpy(coordinates) # list of coord objects
+    return coords_to_numpy(coordinates) # list of coord objects
+
     # coords = np array of lat long
-    return sample_route_points(coords, n_samples)
+    # return sample_route_points(coords, n_samples)

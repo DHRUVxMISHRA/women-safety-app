@@ -1,7 +1,8 @@
 from app.services.sampling_service import prepare_route_points
 from app.ml_models.ml_model import predict_route_risk
 import numpy as np
-import json
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 #          [
         #     Route(
         #         coordinates=[
@@ -34,11 +35,11 @@ def rank_routes(routes): # list of routes
 
         # ---------- aggregate route risk ----------
         route_risk = float(np.mean(point_risks))
-        print(route_risk)
+        print(f"Route {i} Point Risks: {point_risks}")
         route.risk_score = route_risk
         route.index = i
 
     # ---------- safest route ----------
     safest_route = min(routes, key=lambda x: x.risk_score)
 
-    return safest_route
+    return safest_route 

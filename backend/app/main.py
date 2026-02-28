@@ -8,7 +8,7 @@ from app.routes.location_routes import router as location_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.init_indexes import create_indexes
 from app.routes.community_routes import router as community_router
-
+from app.routes.safety_tip_routes import router as safety_tip_router
 from contextlib import asynccontextmanager
 from app.db.mongodb import MongoManager
 
@@ -55,3 +55,6 @@ app.include_router(location_router)
 
 # community
 app.include_router(community_router)
+
+# safety tips
+app.include_router(safety_tip_router)

@@ -6,7 +6,6 @@ from app.services.risk_service import rank_routes
 from app.services.directions_service import fetch_routes
 from app.services.polyline_service import decode_route_polyline
 from app.models.route_model import Route as MLRoute
-import json
 from app.schemas.route_schema import Coordinate as CoordinateSchema
 
 router = APIRouter(prefix="/users/routes", tags=["Route Risk"])
