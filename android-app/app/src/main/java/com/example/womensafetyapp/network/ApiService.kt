@@ -3,6 +3,7 @@ package com.example.womensafetyapp.network
 import com.example.womensafetyapp.models.ChatRequest
 import com.example.womensafetyapp.models.ChatResponse
 import com.example.womensafetyapp.models.EmergencyContactRequest
+import com.example.womensafetyapp.models.LocationUpdateRequest
 import com.example.womensafetyapp.models.SafeRouteRequest
 import com.example.womensafetyapp.models.SafeRouteResponse
 import com.example.womensafetyapp.models.SosRequest
@@ -24,7 +25,7 @@ interface ApiService{
 
     @POST("users/chat/{user_id}")
     suspend fun sendChatMessage(
-        @Path("user_id") userId : String,
+        @Path("user_id") userId : Int,
         @Body request: ChatRequest
     ) : ChatResponse
 
@@ -49,4 +50,9 @@ interface ApiService{
     suspend fun calculateSafestRoute(
         @Body request : SafeRouteRequest
     ) : SafeRouteResponse
+
+    @POST("location/update")
+    suspend fun updateLocation(
+        @Body request: LocationUpdateRequest
+    )
 }

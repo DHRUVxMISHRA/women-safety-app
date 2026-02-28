@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.example.womensafetyapp.R
+import com.example.womensafetyapp.models.LocationUpdateRequest
 import com.example.womensafetyapp.models.SosRequest
 import com.example.womensafetyapp.network.ApiProvider
 import com.example.womensafetyapp.utils.LocationUtils
@@ -35,6 +36,9 @@ class SOSForegroundService : Service() {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private var sosTriggerd = false
+
+    private var lastLocationUpdateTime = 0L
+    private val LOCATION_UPDATE_INTERVAL = 15000L // 15 seconds
 
     override fun onCreate(){
         super.onCreate()
@@ -65,9 +69,19 @@ class SOSForegroundService : Service() {
                     // Optional log (keep it)
                     println("SOS Location Update: $locationText")
                     // 🔥 CALL BACKEND ONLY ON FIRST LOCATION UPDATE
-                    if(!sosTriggerd){
+                    val currentTime = System.currentTimeMillis()
+
+// First time → send SOS
+                    if (!sosTriggerd) {
                         sosTriggerd = true
                         sendSosToBackend(lat, lng)
+                        lastLocationUpdateTime = currentTime
+                    } else {
+                        // Every 15 seconds → update location
+                        if (currentTime - lastLocationUpdateTime >= LOCATION_UPDATE_INTERVAL) {
+                            sendLiveLocationToBackend(lat, lng)
+                            lastLocationUpdateTime = currentTime
+                        }
                     }
                 }
             }
@@ -166,6 +180,24 @@ class SOSForegroundService : Service() {
             } catch (e : Exception) {
                 e.printStackTrace()
                 println("SOS API failed")
+            }
+        }
+    }
+
+    private fun sendLiveLocationToBackend(latitude: Double, longitude: Double) {
+
+        val request = LocationUpdateRequest(
+            userId = 500,
+            latitude = latitude,
+            longitude = longitude
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                ApiProvider.provideApi().updateLocation(request)
+                println("Live location updated")
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

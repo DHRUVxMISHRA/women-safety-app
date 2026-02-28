@@ -24,7 +24,7 @@ import com.example.womensafetyapp.MyViewModel.ChatViewModel
 
 @Composable
 fun ChatScreen(
-    userId : String
+    userId : Int
 ) {
 
     var isLoading by remember { mutableStateOf(false) }

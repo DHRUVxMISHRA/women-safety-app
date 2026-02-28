@@ -50,7 +50,7 @@ fun AppNavGraph(
     LaunchedEffect(authState) {
         when(authState){
             is AuthState.Unauthenticated -> {
-                navController.navigate(Routes.PROFILE){
+                navController.navigate(Routes.GET_STARTED){
                     popUpTo(0){
                         inclusive = true
                     }
@@ -195,7 +195,7 @@ fun AppNavGraph(
         }
 
         composable(Routes.CHAT){
-            ChatScreen(userId = "demo_user_123")
+            ChatScreen(userId = 500)
         }
 
         composable(Routes.PROFILE_SCREEN){
@@ -216,6 +216,10 @@ fun AppNavGraph(
 
                 onSOSClick = {
                     navController.navigate(Routes.HOME)
+                },
+
+                onSettingClick = {
+                    navController.navigate(Routes.PROFILE_SCREEN)
                 }
             )
         }

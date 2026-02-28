@@ -47,7 +47,8 @@ import com.example.womensafetyapp.ui.theme.Poppins
 @Composable
 fun Profile(
     onTrackMeClick : () -> Unit,
-    onSOSClick : () -> Unit
+    onSOSClick : () -> Unit,
+    onSettingClick : () -> Unit
 ) {
 
     Scaffold(
@@ -117,7 +118,7 @@ fun Profile(
                 ProfileItem(R.drawable.ic_record6, "Record")
                 ProfileItem(R.drawable.ic_sms6, "SMS")
                 ProfileItem(R.drawable.ic_support6, "App Support")
-                ProfileItem(R.drawable.ic_settings6, "Settings")
+                ProfileItem(R.drawable.ic_settings6, "Settings", onClick = onSettingClick)
 
             }
         }
@@ -185,6 +186,9 @@ Profile(
 
     },
     onSOSClick = {
+
+    },
+    onSettingClick = {
 
     }
 )
