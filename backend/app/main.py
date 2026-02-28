@@ -11,6 +11,7 @@ from app.routes.community_routes import router as community_router
 from app.routes.safety_tip_routes import router as safety_tip_router
 from contextlib import asynccontextmanager
 from app.db.mongodb import MongoManager
+from fastapi.staticfiles import StaticFiles
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,8 +22,13 @@ async def lifespan(app: FastAPI):
     print("🛑 App shutting down...")
     await MongoManager.close()
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    docs_url=None,
+    redoc_url=None,
+    )
 
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # backend testing using ngrok
 app.add_middleware(
@@ -33,7 +39,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.openapi.docs import get_swagger_ui_html
 
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html():
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title="Clefairy API",
+        swagger_favicon_url="/static/app_logo.jpeg"  
+    )
 
 # Sakhi- Chat-Bot
 app.include_router(chat_router)
