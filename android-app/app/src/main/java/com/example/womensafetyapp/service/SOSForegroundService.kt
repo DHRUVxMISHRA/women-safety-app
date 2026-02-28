@@ -7,6 +7,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Build
 import android.os.IBinder
 import android.os.Looper
@@ -42,6 +46,9 @@ class SOSForegroundService : Service() {
 
     override fun onCreate(){
         super.onCreate()
+
+
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -87,8 +94,8 @@ class SOSForegroundService : Service() {
             }
         }
 
-        startForeground(1,createNotification())
-        startLocationUpdates()
+
+
     }
 
     private fun startLocationUpdates(){
@@ -103,9 +110,17 @@ class SOSForegroundService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Later: start foreground notification + location updates
-        // Later we’ll add continuous location updates here
+
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
+
+        startForeground(1, createNotification())
+
+        startLocationUpdates()
+
         return START_STICKY
     }
 
@@ -118,6 +133,7 @@ class SOSForegroundService : Service() {
         } else{
             stopForeground(true)
         }
+
     }
     override fun onBind(intent: Intent?): IBinder? = null
         // We don't need binding

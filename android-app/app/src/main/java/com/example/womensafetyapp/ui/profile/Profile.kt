@@ -2,6 +2,7 @@ package com.example.womensafetyapp.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,9 @@ import com.example.womensafetyapp.ui.theme.Poppins
 fun Profile(
     onTrackMeClick : () -> Unit,
     onSOSClick : () -> Unit,
-    onSettingClick : () -> Unit
+    onSettingClick : () -> Unit,
+    onChatClick : () -> Unit,
+    onHelplineClick : () -> Unit
 ) {
 
     Scaffold(
@@ -114,12 +117,44 @@ fun Profile(
 
                 ProfileItem(R.drawable.ic_sos6, "SOS", onClick = onSOSClick)
                 ProfileItem(R.drawable.ic_track6, "Track me", onClick = onTrackMeClick)
-                ProfileItem(R.drawable.ic_helpline6, "Helpline")
+                ProfileItem(R.drawable.ic_helpline6, "Helpline", onClick = onHelplineClick)
                 ProfileItem(R.drawable.ic_record6, "Record")
                 ProfileItem(R.drawable.ic_sms6, "SMS")
                 ProfileItem(R.drawable.ic_support6, "App Support")
                 ProfileItem(R.drawable.ic_settings6, "Settings", onClick = onSettingClick)
 
+            }
+
+            // 🤖 Floating Sakhi AI Button
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 20.dp, bottom = 30.dp) // adjust if needed
+                    .size(65.dp)
+                    .shadow(
+                        elevation = 25.dp,
+                        shape = CircleShape,
+                        ambientColor = Color(0x55FF4081),
+                        spotColor = Color(0x55FF4081)
+                    )
+                    .clip(CircleShape)
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                Color(0xFFFF4F8B),   // Light Pink
+                                Color(0xFFE91E63)    // Dark Pink
+                            )
+                        )
+                    )
+                    .clickable { onChatClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_sakhi5),
+                    contentDescription = "Ask Sakhi AI",
+                    modifier = Modifier.size(52.dp)
+                )
             }
         }
     }
@@ -190,6 +225,12 @@ Profile(
     },
     onSettingClick = {
 
+    },
+    onChatClick = {
+
+    },
+    onHelplineClick = {
+        
     }
 )
 

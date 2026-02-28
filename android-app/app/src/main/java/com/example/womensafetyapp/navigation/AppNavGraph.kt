@@ -29,12 +29,15 @@ import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.womensafetyapp.MyViewModel.SOSViewModel
+import com.example.womensafetyapp.settings.SettingsScreen
 
 import com.example.womensafetyapp.ui.auth.AuthState
 import com.example.womensafetyapp.ui.auth.AuthViewModel
 import com.example.womensafetyapp.ui.auth.OtpScreen
 import com.example.womensafetyapp.ui.auth.PhoneNumberScreen
+import com.example.womensafetyapp.ui.helpline.HelplineScreen
 import com.example.womensafetyapp.ui.profile.Profile
+import com.example.womensafetyapp.ui.sos.SOSScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -131,51 +134,54 @@ fun AppNavGraph(
 //        composable(Routes.AADHAAR){
 //            AadhaarScreen(navController)
 //        }
+//
+//        composable(Routes.HOME){
+//            val context = LocalContext.current
 
-        composable(Routes.HOME){
-            val context = LocalContext.current
 
-
-            HomeScreen(
-                onSosClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        // request notification permission if needed
-                    }
-
-                    if (ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-
-                        // Request permission
-                        ActivityCompat.requestPermissions(
-                            context as android.app.Activity,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                            100
-                        )
-
-                        return@HomeScreen
-                    }
-
-                    val serviceIntent =
-                        Intent(context, SOSForegroundService::class.java)
-
-                    context.startForegroundService(serviceIntent)
-
-                    navController.navigate(Routes.EMERGENCY) {
-                        launchSingleTop = true
-                    }
-
-                },
-                onChatClick = {
-                    navController.navigate(Routes.CHAT)
-                },
-                onLogoutClick = {
-                    authViewModel.signOut()
-                }
-            )
-        }
+//            HomeScreen(
+//                onSosStart = {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                        // request notification permission if needed
+//                    }
+//
+//                    if (ContextCompat.checkSelfPermission(
+//                            context,
+//                            Manifest.permission.ACCESS_FINE_LOCATION
+//                        ) != PackageManager.PERMISSION_GRANTED
+//                    ) {
+//
+//                        // Request permission
+//                        ActivityCompat.requestPermissions(
+//                            context as android.app.Activity,
+//                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                            100
+//                        )
+//
+//                        return@HomeScreen
+//                    }
+//
+//                    val serviceIntent =
+//                        Intent(context, SOSForegroundService::class.java)
+//
+//                    context.startForegroundService(serviceIntent)
+//
+//                    navController.navigate(Routes.EMERGENCY) {
+//                        launchSingleTop = true
+//                    }
+//
+//                },
+//                onSosStop = {
+//
+//                },
+//                onChatClick = {
+//                    navController.navigate(Routes.CHAT)
+//                },
+//                onLogoutClick = {
+//                    authViewModel.signOut()
+//                }
+//            )
+//        }
 
         composable(Routes.EMERGENCY){
 
@@ -215,11 +221,19 @@ fun AppNavGraph(
                 },
 
                 onSOSClick = {
-                    navController.navigate(Routes.HOME)
+                    navController.navigate(Routes.SOS)
                 },
 
                 onSettingClick = {
-                    navController.navigate(Routes.PROFILE_SCREEN)
+                    navController.navigate(Routes.SETTINGS)
+                },
+
+                onChatClick = {
+                    navController.navigate(Routes.CHAT)
+                },
+
+                onHelplineClick = {
+                    navController.navigate(Routes.HELPLINE)
                 }
             )
         }
@@ -227,6 +241,64 @@ fun AppNavGraph(
         composable(Routes.SAFE_ROUTE){
             SafeRouteScreen()
         }
+
+        composable(Routes.SOS){
+
+            val context = LocalContext.current
+            val viewModel: SOSViewModel = hiltViewModel()
+            val locationText by viewModel.locationText.collectAsState()
+
+            SOSScreen(
+                locationText = locationText,
+                onStartSOS = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        // request notification permission if needed
+                    }
+
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        // Request permission
+                        ActivityCompat.requestPermissions(
+                            context as android.app.Activity,
+                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            100
+                        )
+
+                        return@SOSScreen
+                    }
+
+                    val serviceIntent =
+                        Intent(context, SOSForegroundService::class.java)
+
+                    context.startForegroundService(serviceIntent)
+
+                },
+                onStopSOS = {
+
+                    val serviceIntent =
+                        Intent(context, SOSForegroundService::class.java)
+
+                    context.stopService(serviceIntent)
+                }
+            )
+        }
+
+        composable(Routes.SETTINGS){
+            SettingsScreen(
+                onLogoutClick = {
+                    authViewModel.signOut()
+                }
+            )
+        }
+
+        composable(Routes.HELPLINE){
+            HelplineScreen()
+        }
+
     }
 
 }

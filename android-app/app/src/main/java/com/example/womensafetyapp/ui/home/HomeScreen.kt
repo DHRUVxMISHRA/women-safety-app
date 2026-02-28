@@ -16,92 +16,120 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.womensafetyapp.utils.LocationUtils
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-   onSosClick:()-> Unit,
-    onChatClick: ()-> Unit,
-    onLogoutClick: ()-> Unit
-
-
+    onSosStart: () -> Unit,
+    onSosStop: () -> Unit,
+    onChatClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
 
+    var isSosActive by remember { mutableStateOf(false) }
+    var locationText by remember { mutableStateOf("Fetching location...") }
+    val context = LocalContext.current
+
+    LaunchedEffect(isSosActive) {
+        if (isSosActive) {
+            LocationUtils.getCurrentLocation(context) { address ->
+                locationText = address
+            }
+        }
+    }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
+
         Text(
-            text = "You are Safe",
-            fontSize = 22.sp,
+            text = if (isSosActive) "SOS ACTIVE" else "You are Safe",
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF2E7D32)
+            color = if (isSosActive) Color.Red else Color(0xFF2E7D32)
         )
 
         Button(
-            onClick = onSosClick,
-            modifier = Modifier
-                .size(220.dp),
+            onClick = {
+                if (isSosActive) {
+                    isSosActive = false
+                    onSosStop()
+                } else {
+                    isSosActive = true
+                    onSosStart()
+                }
+            },
+            modifier = Modifier.size(220.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red
+                containerColor = if (isSosActive) Color.DarkGray else Color.Red
             ),
-            shape = MaterialTheme.shapes.extraLarge
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(
-                text = "SOS",
-                fontSize = 36.sp,
+                text = if (isSosActive) "STOP SOS" else "SOS",
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
         }
 
-        Text(
-            text = "Tap in case of emergency",
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
-
-
-        Button(
-            onClick = onChatClick,
-            modifier = Modifier.size(180.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1976D2)
-            ),
-            shape = MaterialTheme.shapes.large
-        ) {
+        if (isSosActive) {
             Text(
-                text = "Talk to Sakhi",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                text = "📍 $locationText",
+                fontSize = 14.sp
             )
+        } else {
+            Text(
+                text = "Tap in case of emergency",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+        }
+
+        if (!isSosActive) {
+            Button(
+                onClick = onChatClick,
+                modifier = Modifier.size(180.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1976D2)
+                ),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+                Text(
+                    text = "Talk to Sakhi",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+            }
         }
 
         Text(
             text = "Logout",
             color = Color.Red,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .clickable { onLogoutClick() }
+            modifier = Modifier.clickable { onLogoutClick() }
         )
     }
 }
-
 
 @Preview(
 
@@ -113,7 +141,8 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview(){
     HomeScreen(
-        onSosClick = {},
+        onSosStart = {},
+        onSosStop = {},
         onChatClick = {},
         onLogoutClick = {}
     )

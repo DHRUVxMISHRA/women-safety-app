@@ -27,6 +27,11 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -47,6 +52,21 @@
             android:exported="false" />
 
 
+        <service
+            android:name=".service.BackgroundShakeService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+
+
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".MainActivity"
