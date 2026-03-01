@@ -13,6 +13,7 @@ from app.routes.sp_routes import router as sp_router
 from contextlib import asynccontextmanager
 from app.db.mongodb import MongoManager
 from fastapi.staticfiles import StaticFiles
+from fastapi.openapi.docs import get_swagger_ui_html
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,7 +27,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     lifespan=lifespan,
     docs_url=None,
-    redoc_url=None,
+    redoc_url=None
     )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -40,12 +41,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi.openapi.docs import get_swagger_ui_html
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
+        openapi_url="/openapi.json",
         title="Clefairy API",
         swagger_favicon_url="/static/app_logo.jpeg"  
     )
