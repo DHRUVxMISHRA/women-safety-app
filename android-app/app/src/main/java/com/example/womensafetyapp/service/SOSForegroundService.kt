@@ -7,11 +7,16 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.example.womensafetyapp.R
+import com.example.womensafetyapp.models.LocationUpdateRequest
 import com.example.womensafetyapp.models.SosRequest
 import com.example.womensafetyapp.network.ApiProvider
 import com.example.womensafetyapp.utils.LocationUtils
@@ -36,8 +41,14 @@ class SOSForegroundService : Service() {
     private lateinit var locationCallback: LocationCallback
     private var sosTriggerd = false
 
+    private var lastLocationUpdateTime = 0L
+    private val LOCATION_UPDATE_INTERVAL = 15000L // 15 seconds
+
     override fun onCreate(){
         super.onCreate()
+
+
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -65,16 +76,26 @@ class SOSForegroundService : Service() {
                     // Optional log (keep it)
                     println("SOS Location Update: $locationText")
                     // 🔥 CALL BACKEND ONLY ON FIRST LOCATION UPDATE
-                    if(!sosTriggerd){
+                    val currentTime = System.currentTimeMillis()
+
+// First time → send SOS
+                    if (!sosTriggerd) {
                         sosTriggerd = true
                         sendSosToBackend(lat, lng)
+                        lastLocationUpdateTime = currentTime
+                    } else {
+                        // Every 15 seconds → update location
+                        if (currentTime - lastLocationUpdateTime >= LOCATION_UPDATE_INTERVAL) {
+                            sendLiveLocationToBackend(lat, lng)
+                            lastLocationUpdateTime = currentTime
+                        }
                     }
                 }
             }
         }
 
-        startForeground(1,createNotification())
-        startLocationUpdates()
+
+
     }
 
     private fun startLocationUpdates(){
@@ -89,9 +110,17 @@ class SOSForegroundService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Later: start foreground notification + location updates
-        // Later we’ll add continuous location updates here
+
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
+
+        startForeground(1, createNotification())
+
+        startLocationUpdates()
+
         return START_STICKY
     }
 
@@ -104,6 +133,7 @@ class SOSForegroundService : Service() {
         } else{
             stopForeground(true)
         }
+
     }
     override fun onBind(intent: Intent?): IBinder? = null
         // We don't need binding
@@ -151,11 +181,11 @@ class SOSForegroundService : Service() {
     private fun sendSosToBackend(latitude : Double, longitude : Double) {
 
         val request = SosRequest(
-            userId = "demo_user_123",
+            userId = 500,
             name = "Dhruv",
             latitude = latitude,
             longitude = longitude,
-            emergencyContact = "+919057625639"
+
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -166,6 +196,24 @@ class SOSForegroundService : Service() {
             } catch (e : Exception) {
                 e.printStackTrace()
                 println("SOS API failed")
+            }
+        }
+    }
+
+    private fun sendLiveLocationToBackend(latitude: Double, longitude: Double) {
+
+        val request = LocationUpdateRequest(
+            userId = 500,
+            latitude = latitude,
+            longitude = longitude
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                ApiProvider.provideApi().updateLocation(request)
+                println("Live location updated")
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

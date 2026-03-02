@@ -11,7 +11,7 @@ class ChatViewModel : ViewModel() {
     private val repo = ChatRepo()
 
     fun sendMessage(
-        userId : String,
+        userId : Int,
         message : String,
         onResult : (String?) -> Unit
     ){
@@ -20,6 +20,7 @@ class ChatViewModel : ViewModel() {
             try {
                 val response = repo.sendMessage(userId, message)
                 onResult(response.response)
+
             } catch (e  : Exception) {
                     e.printStackTrace()
                     onResult(null)

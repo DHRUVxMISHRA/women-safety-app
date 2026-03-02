@@ -133,7 +133,7 @@ fun LoginScreen(
 
         ) {
 
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             Text(
                 text = "Welcome Back!",

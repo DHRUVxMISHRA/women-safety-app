@@ -1,13 +1,17 @@
 package com.example.womensafetyapp.ui.auth
 
 import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.util.Patterns.EMAIL_ADDRESS
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.womensafetyapp.models.UserRequest
 import com.example.womensafetyapp.repo.UserRepo
+import com.example.womensafetyapp.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthOptions
@@ -18,7 +22,7 @@ import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application : Application) : AndroidViewModel(application) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -41,8 +45,21 @@ class AuthViewModel : ViewModel() {
     private var tempAadhaar : String? = null
     private var tempPhone : String? = null
 
+    private val sessionManager = SessionManager(context = getApplication())
+
     init {
 
+        val savedUserId = sessionManager.getUserId()
+
+        // 🔹 STEP 1: Check if session already exists
+        if(savedUserId != null){
+            _authState.value = AuthState.Authenticated
+        }else{
+            _authState.value = AuthState.GetStarted
+        }
+
+
+        // 🔹 STEP 2: Setup OTP callbacks
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onVerificationCompleted(credential: com.google.firebase.auth.PhoneAuthCredential) {
@@ -140,7 +157,9 @@ class AuthViewModel : ViewModel() {
 
     fun signOut() {
         auth.signOut()
+        sessionManager.clearSession()
         _authState.value = AuthState.Unauthenticated
+
     }
 
     fun onPasswordChanged(password: String) {
@@ -302,7 +321,11 @@ class AuthViewModel : ViewModel() {
 
                             val body = response.body()
 
-                            if (body?.message == "user added successfully") {
+                            if (body != null && body.message == "user added successfully") {
+                                val userId = body.userId
+
+                                println("USER ID RECEIVED : $userId")
+                                sessionManager.saveUserId(userId.toString())
                                 _authState.value = AuthState.Authenticated
                             } else {
                                 _authState.value = AuthState.Error("Backend Error")
@@ -335,6 +358,7 @@ sealed class AuthState {
     object Loading : AuthState()
     object PhoneVerificationRequired : AuthState()
     object OtpSent : AuthState()
+    object GetStarted : AuthState()
     data class Error(val message: String) : AuthState()
 
 }

@@ -35,6 +35,25 @@ object LocationUtils {
                 onLocationResult("Location error")
             }
     }
+
+
+
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLatLng(
+        context: Context,
+        onLocationResult: (Double, Double) -> Unit
+    ){
+
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                location?.let{
+                    onLocationResult(it.latitude, it.longitude)
+            }
+            }
+    }
      fun getAddressFromLocation(
         context: Context,
         latitude: Double,
@@ -62,6 +81,29 @@ object LocationUtils {
             }
         } catch (e : Exception) {
             context.getString(R.string.location_prefix) +  " Location detected (address unavailable)"
+        }
+    }
+
+
+    fun getLatLngFromAddress(
+        context: Context,
+        address: String,
+        onResult: (Double?, Double?) -> Unit
+    ) {
+        try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val list = geocoder.getFromLocationName(address, 1)
+
+            if (!list.isNullOrEmpty()) {
+                val location = list[0]
+                onResult(location.latitude, location.longitude)
+            } else {
+                onResult(null, null)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onResult(null, null)
         }
     }
 }

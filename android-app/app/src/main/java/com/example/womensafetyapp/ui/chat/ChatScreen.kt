@@ -24,7 +24,7 @@ import com.example.womensafetyapp.MyViewModel.ChatViewModel
 
 @Composable
 fun ChatScreen(
-    userId : String
+    userId : Int
 ) {
 
     var isLoading by remember { mutableStateOf(false) }
@@ -40,6 +40,7 @@ fun ChatScreen(
             .padding(16.dp)
     ) {
 
+        Spacer(modifier = Modifier.height(30.dp))
         Text("Sakhi Chatbot", style = MaterialTheme.typography.titleLarge)
 
         Spacer(modifier = Modifier.height(16.dp))
