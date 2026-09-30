@@ -1,8 +1,5 @@
 <div align="center">
 
-<!-- 📸 ADD LOGO HERE: save as assets/logo.png -->
-<img src="assets/logo.png" alt="Clefairy Logo" width="140"/>
-
 # Clefairy
 
 ### A Women Safety Application
@@ -140,9 +137,6 @@ Clefairy brings prevention, detection, and response into a single app:
 
 ## Screenshots
 
-> Replace each placeholder below with a real screenshot. Suggested path: `assets/screenshots/`.
-> Tip: keep all phone screenshots the same width (e.g. `width="220"`) for a clean layout.
-
 ### Onboarding & Authentication
 
 | Splash | Register | Login |
@@ -177,14 +171,7 @@ Clefairy brings prevention, detection, and response into a single app:
 |:---------------------:|
 | <!-- 📸 --> <img src="assets/screenshots/govt-help-centers.png" width="220"/> |
 
-### Demo Video
 
-<!-- 📸 ADD DEMO GIF / VIDEO LINK HERE -->
-<p align="center">
-  <a href="YOUR_DEMO_VIDEO_LINK">
-    <img src="assets/demo-thumbnail.png" alt="Watch Demo" width="60%"/>
-  </a>
-</p>
 
 ---
 
@@ -225,11 +212,6 @@ Clefairy brings prevention, detection, and response into a single app:
    └──────────────┘                                     └──────────────────┘
 ```
 
-<!-- 📸 OPTIONAL: replace or supplement the diagram above with an image -->
-<p align="center">
-  <img src="assets/architecture.png" alt="Architecture Diagram" width="80%"/>
-</p>
-
 ---
 
 ## Project Structure
@@ -246,8 +228,6 @@ women-safety-app/
 ---
 
 ## Getting Started
-
-> ⚠️ Commands below are standard templates. Adjust file names and paths to match your project.
 
 ### Prerequisites
 
@@ -346,8 +326,8 @@ FIREBASE_CREDENTIALS=path/to/serviceAccountKey.json
 | Name | Role | GitHub |
 |------|------|--------|
 | Dhruv Mishra | Developer | [@DHRUVxMISHRA](https://github.com/DHRUVxMISHRA) |
-| _Add member_ | _Role_ | _link_ |
-| _Add member_ | _Role_ | _link_ |
+| Mohammad Sohail Ali | Backend Developer | [@MdSohailAli3](https://github.com/MdSohailAli3) |
+| Ali Akbar Khan | UX/UI Designer | [@aliiakbarkhan](https://github.com/aliiakbarkhan) |
 
 ---
 
