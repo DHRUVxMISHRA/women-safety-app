@@ -328,6 +328,7 @@ FIREBASE_CREDENTIALS=path/to/serviceAccountKey.json
 | Dhruv Mishra | Developer | [@DHRUVxMISHRA](https://github.com/DHRUVxMISHRA) |
 | Mohammad Sohail Ali | Backend Developer | [@MdSohailAli3](https://github.com/MdSohailAli3) |
 | Ali Akbar Khan | UX/UI Designer | [@aliiakbarkhan](https://github.com/aliiakbarkhan) |
+| Yash Mishra | ML Engineer | [@YaashxMishra](https://github.com/YaashxMishra) |
 
 ---
 
