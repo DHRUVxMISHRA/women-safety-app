@@ -48,11 +48,6 @@
 
 Instead of forcing a user to unlock a phone, find an app, and make a call during a moment of panic, Clefairy is built to act **for** her: automatically detecting distress, alerting trusted contacts, and sharing her live location.
 
-<!-- 📸 ADD HERO BANNER HERE: a wide image or GIF showing the app in action -->
-<p align="center">
-  <img src="assets/hero-banner.png" alt="Clefairy Hero Banner" width="90%"/>
-</p>
-
 ---
 
 ## Problem Statement
