@@ -141,35 +141,35 @@ Clefairy brings prevention, detection, and response into a single app:
 
 | Splash | Register | Login |
 |:------:|:--------:|:-----:|
-| <!-- 📸 --> <img src="assets/screenshots/splash.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/register.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/login.png" width="220"/> |
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/loading%20pages/01.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/login%20pages/SIGNIN.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/login%20pages/LOGIN.jpg" width="220"/> |
 
 ### Home & Profile
 
 | Home | Profile / Quick Actions | Settings |
 |:----:|:-----------------------:|:--------:|
-| <!-- 📸 --> <img src="assets/screenshots/home.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/profile.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/settings.png" width="220"/> |
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/main%20screen%20pages/SCREEN%2001.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/profile%20and%20settings%20page/PROFILE.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/profile%20and%20settings%20page/SETTINGD.jpg" width="220"/> |
 
 ### Emergency Features
 
 | SOS | Record | Live Track Me |
 |:---:|:------:|:-------------:|
-| <!-- 📸 --> <img src="assets/screenshots/sos.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/record.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/live-track.png" width="220"/> |
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/SOS.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/RECORDING.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/TRACK%20ME.jpg" width="220"/> |
 
-| Safe Route | Emergency SMS | Helpline Numbers |
-|:----------:|:-------------:|:----------------:|
-| <!-- 📸 --> <img src="assets/screenshots/safe-route.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/emergency-sms.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/helpline.png" width="220"/> |
+| Emergency SMS | Helpline Numbers |
+|:-------------:|:----------------:|
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/EMERGENCY%20CALL.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/NUMBERS.jpg" width="220"/> |
 
 ### AI & Community
 
 | Sakhi AI | Safety Tips | Communities |
 |:--------:|:-----------:|:-----------:|
-| <!-- 📸 --> <img src="assets/screenshots/sakhi-ai.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/safety-tips.png" width="220"/> | <!-- 📸 --> <img src="assets/screenshots/communities.png" width="220"/> |
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/SAKHI.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/VIDEOS.jpg" width="220"/> | <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/COMMUNITIES.jpg" width="220"/> |
 
 ### Government Help Centers
 
 | Help Center Directory |
 |:---------------------:|
-| <!-- 📸 --> <img src="assets/screenshots/govt-help-centers.png" width="220"/> |
+| <!-- 📸 --> <img src="https://github.com/DHRUVxMISHRA/women-safety-app/blob/main/ui%20design/featurs%20pages/EMERGENCY%20CALL.jpg" width="220"/> |
 
 
 
