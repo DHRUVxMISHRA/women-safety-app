@@ -2,6 +2,8 @@
 
 # Clefairy
 
+<img src = "https://github.com/aliiakbarkhan/aliiakbarkhan/blob/main/assets/clef.png"></img>
+
 ### A Women Safety Application
 
 **One tap. Automatic protection. Help that reaches you faster.**
@@ -50,18 +52,58 @@ Instead of forcing a user to unlock a phone, find an app, and make a call during
 
 ---
 
-## Problem Statement
+## Problem Statement & Cause
 
-Women in danger often cannot reach for help in time. The key gaps Clefairy addresses:
+Clefairy exists because the numbers below are not abstractions. They are registered cases, which means the real figure is higher, since many women never report.
 
-- Delayed emergency response during dangerous situations
-- Inability to manually call for help in moments of panic
-- No quick access to nearby support or helpers
-- Low awareness of verified women's safety and help centers
-- Existing apps are fragmented and not fully integrated
-- Weak connection with community and government support systems
-- A need for faster and more reliable safety solutions
+### The scale (NCRB, Crime in India 2024)
 
+- **4,41,534** crimes against women were registered in 2024, which works out to more than **1,200 a day** ([LatestLY/agency report](https://www.latestly.com/agency-news/india-news-14-years-after-the-nirabhaya-rape-women-continue-to-fear-violence-in-public-spaces-at-home-7629500.html)).
+- The biggest categories were cruelty by husband or relatives (**1,20,227**), kidnapping and abduction of women (**67,829**), and assault with intent to outrage modesty (**48,303**) ([same report](https://www.latestly.com/agency-news/india-news-14-years-after-the-nirabhaya-rape-women-continue-to-fear-violence-in-public-spaces-at-home-7629500.html)).
+- **2,06,777** rape cases were still pending trial at the end of 2024, and the conviction rate for rape was **24.4%** ([same report](https://www.latestly.com/agency-news/india-news-14-years-after-the-nirabhaya-rape-women-continue-to-fear-violence-in-public-spaces-at-home-7629500.html)).
+- Delhi recorded **13,396** cases in 2024, the most among the 19 mega cities, including 1,058 rapes ([The Tribune](https://www.tribuneindia.com/news/delhi/delhi-tops-crime-against-women-among-mega-cities-ncrb-report/)). Delhi Police have attributed part of the high count to free and fair FIR registration ([Deccan Herald](https://www.deccanherald.com/amp/story/india%2Fdelhi%2Fdelhi-tops-metro-cities-in-crimes-against-women-with-13366-cases-in-2023-ncrb-3748479)).
+
+### How reported cases have risen
+
+<div align="center">
+<img src="assets/crimes-against-women-india.png" alt="Bar and line chart of registered crimes against women in India from 2014 to 2024, rising from 3.38 lakh to a peak of 4.48 lakh in 2023" width="760"/>
+</div>
+
+Registered cases rose about **31%** between 2014 and 2024, from 3,37,922 to 4,41,534, and peaked at **4,48,211 in 2023**. The only earlier years that fell were 2015 and the COVID-19 year of 2020 ([Factly](https://factly.in/data-the-number-of-reported-crimes-against-women-increased-by-over-30-between-2014-2022/)). The 2024 figure is a 1.5% dip from 2023, and it is also the first NCRB report under the new Bharatiya Nyaya Sanhita ([Drishti IAS](https://www.drishtiias.com/daily-updates/daily-news-analysis/ncrbs-crime-in-india-2024-report)).
+
+> **How to read this chart:** NCRB counts *registered* cases, so a rise can reflect more crime, more willingness to report, or both. Activists have long argued that reporting has increased while the true rate is much harder to measure ([The Wire](https://thewire.in/gender/conviction-rate-crimes-women-hits-record-low)). The y-axis starts at 2.5 lakh to make year-to-year changes visible. Some early-year figures differ slightly between NCRB editions and secondary sources; we used the values reported in the cited articles.
+
+| Year | Cases | Year | Cases |
+|:----:|------:|:----:|------:|
+| 2014 | 3,37,922 | 2020 | 3,71,503 |
+| 2015 | 3,27,394 | 2021 | 4,28,278 |
+| 2016 | 3,38,954 | 2022 | 4,45,256 |
+| 2017 | 3,59,849 | 2023 | 4,48,211 |
+| 2018 | 3,78,277 | 2024 | 4,41,534 |
+| 2019 | 4,05,861 | | |
+
+Sources: [Factly](https://factly.in/data-the-number-of-reported-crimes-against-women-increased-by-over-30-between-2014-2022/) (2014, 2015, 2019, 2020), [The Wire](https://thewire.in/gender/conviction-rate-crimes-women-hits-record-low) (2016), [Outlook](https://www.outlookindia.com/national/india-news-crimes-against-women-in-india-continue-to-rise-up-most-unsafe-news-340881) (2017), [SPRF](https://sprf.in/crimes-against-women-in-india-trends-challenges-and-policy-responses/) (2018), [Deccan Herald](https://www.deccanherald.com/amp/story/india%2Fcrimes-against-women-up-by-15-shows-ncrb-data-1140874.html) (2021), [The Tribune](https://www.tribuneindia.com/news/india/every-hour-52-crimes-against-women-cases-registered-in-india-in-2022-569041/amp) (2022), [National Herald](https://www.nationalheraldindia.com/national/ncrb-2023-report-rise-in-crimes-against-women-cybercrime-farmer-suicides) (2023), [LatestLY](https://www.latestly.com/agency-news/india-news-14-years-after-the-nirabhaya-rape-women-continue-to-fear-violence-in-public-spaces-at-home-7629500.html) (2024).
+
+### Recent cases that shook the country
+
+| When | Where | What happened | Source |
+|------|-------|---------------|--------|
+| Sept 2026 | Delhi | Three men posing as police officers allegedly gang-raped a 17-year-old girl in a public park, sparking student protests. This followed the rape and murder of a 16-year-old and the alleged rape of a 17-year-old by a bus driver and conductor in recent weeks. | [AFP via Manila Times](https://www.manilatimes.net/2026/09/26/world/asia-oceania/india-rape-cases-turn-focus-on-womens-safety/2433055), [NewsX](https://www.newsx.com/photos/india/from-park-horror-to-mass-protests-how-delhi-erupted-after-aastha-kunj-gang-rape-case-277783/) |
+| Sept 2026 | Punjab | Violent protests at Lovely Professional University over an alleged rape on campus; classes were suspended for 10 days. University officials deny the claim and police are investigating. | [Al Jazeera](https://www.aljazeera.com/news/2026/9/28/indian-university-suspends-classes-amid-violent-protests-over-alleged-rape) |
+| July 2026 | Baruipur, West Bengal | The rape and murder of a girl led to widespread unrest, the mob killing of an innocent man, and the death of the main suspect in police custody. | [CNN](https://www.cnn.com/2026/07/10/india/india-west-bengal-girl-rape-murder-intl-hnk) |
+| May 2026 | Sulur, Coimbatore, Tamil Nadu | A ten-year-old girl was raped and murdered; two men were arrested. | [Wikipedia (with linked news sources)](https://en.wikipedia.org/wiki/Sulur_rape_and_murder_case) |
+| Aug 2024 | Dhing, Assam | The gang rape of a 14-year-old girl led to protests across the state. | [Wikipedia (with linked news sources)](https://en.wikipedia.org/wiki/2024_Dhing_gang_rape_case) |
+| Aug 2024 | Kolkata, West Bengal | A postgraduate trainee doctor was raped and murdered on duty at RG Kar Medical College and Hospital, triggering prolonged nationwide protests. The convict was sentenced to life imprisonment in January 2025, and appeals are ongoing. | [PTI via Careers360](https://news.careers360.com/rg-kar-case-sanjay-roy-sentenced-life-imprisonment-till-death-in-rape-murder-of-doctor), [Medical Dialogues](https://medicaldialogues.in/news/health/doctors/cbi-submits-sealed-report-on-alleged-conspiracy-in-rg-kar-doctor-rape-murder-case-180002) |
+| 2018 | Kathua, Jammu and Kashmir | An eight-year-old girl was gang-raped and murdered inside a temple, prompting nationwide protests in April 2018. | [Al Jazeera](https://www.aljazeera.com/news/2018/4/15/india-nationwide-protests-to-demand-justice-for-rape-victims) |
+| Dec 2012 | Delhi | The Nirbhaya case: a 23-year-old student was gang-raped on a city bus, leading to nationwide protests and stronger rape laws. | [NPR](https://www.npr.org/2012/12/18/167552362/rape-case-in-india-provokes-widespread-outrage) |
+
+Each of these cases drew public outcry, and AFP notes the recent Delhi cases brought arrests and political condemnation. Yet campaigners and lawyers quoted by AFP say the problem is largely enforcement: overstretched police, slow courts, and a rape conviction rate that has hovered around a quarter of cases that reach trial since 2012 ([AFP via Manila Times](https://www.manilatimes.net/2026/09/26/world/asia-oceania/india-rape-cases-turn-focus-on-womens-safety/2433055)).
+
+### What this means for Clefairy
+
+Laws and punishments act *after* harm. Women need something that works **during** the moment, when she cannot unlock a phone, find an app, or make a call. That gap between the crime and the response is the cause Clefairy was built for: automatic detection, one-tap alerts, live location sharing, and direct access to verified help.
+
+*Case details are drawn from news reports; where a case is still under investigation or trial, it is described as alleged.*
 ---
 
 ## Our Solution
